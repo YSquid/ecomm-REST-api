@@ -5,6 +5,14 @@ const cartsJSON = require('../json_db/carts.json')
 module.exports = cartsRouter;
 
 cartsRouter.get('/', (req, res) => {
-    const carts = cartsJSON
-    res.send(carts)
+    res.send(cartsJSON)
 })
+
+cartsRouter.get('/:userid', (req, res) => {
+   const {userid} = req.params
+   const filteredCarts = cartsJSON.carts.filter((cart) => {
+    return cart.userID == userid
+   })
+   res.send(filteredCarts)
+})
+

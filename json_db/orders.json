@@ -2,16 +2,16 @@
     "orders":[
        {
           "id":"O001",
-          "userID":"U001",
-          "productIDs":[
+          "userid":"U001",
+          "productids":[
              "P001"
           ],
           "orderdate":"2023-01-01"
        },
        {
           "id":"O002",
-          "userID":"U002",
-          "productIDs":[
+          "userid":"U002",
+          "productids":[
              "P001",
              "P002"
           ],

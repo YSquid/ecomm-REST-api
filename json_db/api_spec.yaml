@@ -41,13 +41,13 @@ paths:
                 get_products_404:
                   value: Resource not found. Ensure the url is correct and you are connected to the internet.
   /products/{id}:
-    summary: Products by ID actions
-    description: This path is used for GET, PUT, and DELETE actions against a product by ID.
+    summary: Products by id actions
+    description: This path is used for GET, PUT, and DELETE actions against a product by id.
     get:
       tags:
       - Products
-      summary: GET a product by ID
-      description: Retrieve the product with matching ID from the products table
+      summary: GET a product by id
+      description: Retrieve the product with matching id from the products table
       operationId: get_products_id
       parameters:
       - name: id
@@ -98,11 +98,11 @@ paths:
                     - id: U001
                       firstname: Susan
                       lastname: Alberts
-                      cartID: C001
+                      cartid: C001
                     - id: U002
                       firstname: Antoine
                       lastname: Jackson
-                      cartID: C002
+                      cartid: C002
         "404":
           description: 404 error - resource not found
           content:
@@ -113,13 +113,13 @@ paths:
                     Resource not found. Ensure the url is correct and you are
                      connected to the internet.
   /users/{id}:
-    summary: Users by ID actions
-    description: This path is used for GET, PUT, and DELETE actions against a user by ID.
+    summary: Users by id actions
+    description: This path is used for GET, PUT, and DELETE actions against a user by id.
     get:
       tags:
       - Users
-      summary: GET user by ID
-      description: Retrieve a user with matching ID from the users table.
+      summary: GET user by id
+      description: Retrieve a user with matching id from the users table.
       operationId: get_users_id
       parameters:
       - name: id
@@ -141,7 +141,7 @@ paths:
                     id: U001
                     firstname: Susan
                     lastname: Alberts
-                    cartID: C001
+                    cartid: C001
         "404":
           description: 404 error - resource not found
           content:
@@ -168,13 +168,13 @@ paths:
                   value:
                     orders:
                     - id: O001
-                      userID: U001
-                      productIDs:
+                      userid: U001
+                      productids:
                       - P001
                       orderdate: 2023-01-01
                     - id: O002
-                      userID: U002
-                      productIDs:
+                      userid: U002
+                      productids:
                       - P001
                       - P002
                       orderdate: 2022-12-29
@@ -186,13 +186,13 @@ paths:
                 get_orders_404:
                   value: Resource not found. Ensure the url is correct and you are connected to the internet.
   /orders/{id}:
-    summary: Orders by ID actions
-    description: This path is used for GET, PUT, and DELETE actions against an order by ID.
+    summary: Orders by id actions
+    description: This path is used for GET, PUT, and DELETE actions against an order by id.
     get:
       tags:
       - Orders
-      summary: GET order by ID
-      description: Retrieve an order with matching ID from the orders table
+      summary: GET order by id
+      description: Retrieve an order with matching id from the orders table
       operationId: get_orders_id
       parameters:
       - name: id
@@ -212,8 +212,8 @@ paths:
                 get_orders_id_success:
                   value:
                     id: O001
-                    userID: U001
-                    productIDs:
+                    userid: U001
+                    productids:
                     - P001
                     orderdate: 2023-01-01
         "404":
@@ -225,12 +225,12 @@ paths:
                   value: Resource not found. Ensure the url is correct and you are connected to the internet.
   /carts/{userid}:
     summary: GET the cart for a specific user
-    description: This path returns the current cart for the User ID specified
+    description: This path returns the current cart for the User id specified
     get:
       tags:
       - Carts
       summary: GET the cart for a specific user
-      description: This path returns the current cart from the joined table users ON carts - joined on users.userID = carts.userID
+      description: This path returns the current cart from the joined table users ON carts - joined on users.userid = carts.userid
       operationId: get_carts_userid
       parameters:
       - name: userid
@@ -250,8 +250,8 @@ paths:
                 get_carts_userid_success:
                   value:
                     id: C001
-                    userID: U001
-                    productIDs:
+                    userid: U001
+                    productids:
                     - P001
         "404":
           description: 404 error - resource not found

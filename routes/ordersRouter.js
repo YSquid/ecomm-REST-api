@@ -8,3 +8,8 @@ ordersRouter.get('/', (req, res) => {
     const orders = ordersJSON
     res.send(orders)
 })
+
+ordersRouter.get('/:id', (req, res) => {
+    const id = req.params.id
+    
+})
