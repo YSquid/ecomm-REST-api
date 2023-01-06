@@ -1,0 +1,21 @@
+{
+    "orders":[
+       {
+          "id":"O001",
+          "userID":"U001",
+          "productIDs":[
+             "P001"
+          ],
+          "orderdate":"2023-01-01"
+       },
+       {
+          "id":"O002",
+          "userID":"U002",
+          "productIDs":[
+             "P001",
+             "P002"
+          ],
+          "orderdate":"2022-12-29"
+       }
+    ]
+ }

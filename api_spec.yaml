@@ -1,0 +1,263 @@
+---
+openapi: 3.0.1
+info:
+  title: Ahmad's Source for Sports API
+  description: An API for working with the database for Ahmad's  Source for Sports Online Store
+  version: 1.0.0
+servers:
+- url: /
+paths:
+  /products:
+    summary: GET all products
+    description: This path is used to retrieve all products from the products table.
+    get:
+      tags:
+      - Products
+      summary: GET all products data
+      description: Retrieve all products data from the products table
+      operationId: get_products
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              examples:
+                get_products_success:
+                  value:
+                    products:
+                    - id: P001
+                      name: Baseball Bat
+                      description: A wodden baseball bat
+                      price: "39.99"
+                    - id: P002
+                      name: Baseball Glove
+                      description: A leather baseball glove
+                      price: "69.99"
+        "404":
+          description: 404 error - resource not found
+          content:
+            text/plain; charset=utf-8:
+              examples:
+                get_products_404:
+                  value: Resource not found. Ensure the url is correct and you are connected to the internet.
+  /products/{id}:
+    summary: Products by ID actions
+    description: This path is used for GET, PUT, and DELETE actions against a product by ID.
+    get:
+      tags:
+      - Products
+      summary: GET a product by ID
+      description: Retrieve the product with matching ID from the products table
+      operationId: get_products_id
+      parameters:
+      - name: id
+        in: path
+        description: The id of the order.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              examples:
+                get_products_id_success:
+                  value:
+                    id: P001
+                    name: Baseball Bat
+                    description: A wooden baseball bat
+                    price: "39.99"
+        "404":
+          description: 404 error - resource not found
+          content:
+            text/plain; charset=utf-8:
+              examples:
+                get_products_id_404:
+                  value: Resource not found. Ensure the url is correct and you are connected to the internet.
+  /users:
+    summary: GET all users
+    description: This path is used to retrieve all users from the users table.
+    get:
+      tags:
+      - Users
+      summary: GET all users
+      description: This path is used to retrieve all users from the users table.
+      operationId: get_users
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              examples:
+                get_users_success:
+                  value:
+                    users:
+                    - id: U001
+                      firstname: Susan
+                      lastname: Alberts
+                      cartID: C001
+                    - id: U002
+                      firstname: Antoine
+                      lastname: Jackson
+                      cartID: C002
+        "404":
+          description: 404 error - resource not found
+          content:
+            text/plain; charset=utf-8:
+              examples:
+                get_users_404:
+                  value: |-
+                    Resource not found. Ensure the url is correct and you are
+                     connected to the internet.
+  /users/{id}:
+    summary: Users by ID actions
+    description: This path is used for GET, PUT, and DELETE actions against a user by ID.
+    get:
+      tags:
+      - Users
+      summary: GET user by ID
+      description: Retrieve a user with matching ID from the users table.
+      operationId: get_users_id
+      parameters:
+      - name: id
+        in: path
+        description: the id of the user
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Success
+          content:
+            apllication/json:
+              examples:
+                get_users_id_success:
+                  value:
+                    id: U001
+                    firstname: Susan
+                    lastname: Alberts
+                    cartID: C001
+        "404":
+          description: 404 error - resource not found
+          content:
+            text/plain; charset=utf-8:
+              examples:
+                get_users_id_404:
+                  value: Resource not found. Ensure the url is correct and you are connected to the internet.
+  /orders:
+    summary: GET all orders
+    description: This path is used to retrieve all orders from the orders table.
+    get:
+      tags:
+      - Orders
+      summary: GET all orders
+      description: This path is used to retrieve all orders from the orders table.
+      operationId: get_orders
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              examples:
+                get_orders_success:
+                  value:
+                    orders:
+                    - id: O001
+                      userID: U001
+                      productIDs:
+                      - P001
+                      orderdate: 2023-01-01
+                    - id: O002
+                      userID: U002
+                      productIDs:
+                      - P001
+                      - P002
+                      orderdate: 2022-12-29
+        "404":
+          description: 404 error - resource not found
+          content:
+            text/plain; charset=utf-8:
+              examples:
+                get_orders_404:
+                  value: Resource not found. Ensure the url is correct and you are connected to the internet.
+  /orders/{id}:
+    summary: Orders by ID actions
+    description: This path is used for GET, PUT, and DELETE actions against an order by ID.
+    get:
+      tags:
+      - Orders
+      summary: GET order by ID
+      description: Retrieve an order with matching ID from the orders table
+      operationId: get_orders_id
+      parameters:
+      - name: id
+        in: path
+        description: the id of the order
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              examples:
+                get_orders_id_success:
+                  value:
+                    id: O001
+                    userID: U001
+                    productIDs:
+                    - P001
+                    orderdate: 2023-01-01
+        "404":
+          description: 404 error - resource not found
+          content:
+            text/plain; charset=utf-8:
+              examples:
+                get_orders_id_404:
+                  value: Resource not found. Ensure the url is correct and you are connected to the internet.
+  /carts/{userid}:
+    summary: GET the cart for a specific user
+    description: This path returns the current cart for the User ID specified
+    get:
+      tags:
+      - Carts
+      summary: GET the cart for a specific user
+      description: This path returns the current cart from the joined table users ON carts - joined on users.userID = carts.userID
+      operationId: get_carts_userid
+      parameters:
+      - name: userid
+        in: path
+        description: the userid for the user who's cart you want to retrieve
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              examples:
+                get_carts_userid_success:
+                  value:
+                    id: C001
+                    userID: U001
+                    productIDs:
+                    - P001
+        "404":
+          description: 404 error - resource not found
+          content:
+            text/plain; charset=utf-8:
+              examples:
+                get_carts_userid_404:
+                  value: Resource not found. Ensure the url is correct and you are connected to the internet.
+components: {}

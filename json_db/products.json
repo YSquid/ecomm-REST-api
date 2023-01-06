@@ -1,0 +1,16 @@
+{
+  "products": [
+    {
+      "id": "P001",
+      "name": "Baseball Bat",
+      "description": "A wooden baseball bat",
+      "price": "39.99"
+    },
+    {
+      "id": "P002",
+      "name": "Baseball Glove",
+      "description": "A leather baseball glove",
+      "price": "69.99"
+    }
+  ]
+}

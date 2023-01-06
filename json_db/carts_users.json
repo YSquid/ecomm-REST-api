@@ -1,0 +1,12 @@
+{
+  "carts_users": [
+    {
+      "userID": "U001",
+      "cartID": "C001"
+    },
+    {
+      "userID": "U002",
+      "cartID": "C002"
+    }
+  ]
+}

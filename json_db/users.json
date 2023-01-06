@@ -1,0 +1,16 @@
+{
+  "users": [
+    {
+      "id": "U001",
+      "firstname": "Susan",
+      "lastname": "Alberts",
+      "cartID": "C001"
+    },
+    {
+      "id": "U002",
+      "firstname": "Antoine",
+      "lastname": "Jackson",
+      "cartIDs": ["P001", "P002"]
+    }
+  ]
+}

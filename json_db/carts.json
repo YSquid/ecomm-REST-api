@@ -1,0 +1,14 @@
+{
+  "carts": [
+    {
+      "id": "C001",
+      "userID": "U001",
+      "productIDs": ["P001"]
+    },
+    {
+      "id": "C002",
+      "userID": "U002",
+      "productIDs": ["P001", "P002"]
+    }
+  ]
+}
