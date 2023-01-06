@@ -12,6 +12,7 @@ app.use(bodyParser.json());
 const apiRouter  = require('../routes/api');
 app.use("/api", apiRouter)
 
+//Homepage route
 app.get('/', (req, res) => {
     res.send('Hello Express!')
 })

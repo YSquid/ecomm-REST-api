@@ -10,7 +10,7 @@
       "id": "U002",
       "firstname": "Antoine",
       "lastname": "Jackson",
-      "cartid": ["P001", "P002"]
+      "cartid": "C002"
     }
   ]
 }

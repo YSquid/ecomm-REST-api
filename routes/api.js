@@ -5,6 +5,8 @@ const usersRouter = require('./usersRouter')
 const ordersRouter = require('./ordersRouter')
 const cartsRouter = require('./cartsRouter')
 
+
+//Mount respective endpoint router at paths
 apiRouter.use('/products/', productsRouter)
 apiRouter.use('/users/', usersRouter)
 apiRouter.use('/orders/', ordersRouter)
