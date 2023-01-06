@@ -1,8 +1,10 @@
 const express = require('express')
 const cartsRouter = express.Router();
+const cartsJSON = require('../json_db/carts.json')
 
 module.exports = cartsRouter;
 
 cartsRouter.get('/', (req, res) => {
-    res.send('Carts GET return')
+    const carts = cartsJSON
+    res.send(carts)
 })
