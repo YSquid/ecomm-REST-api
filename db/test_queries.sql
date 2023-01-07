@@ -122,3 +122,31 @@ VALUES (1, 5);
 
 INSERT INTO carts_products (cart_id, product_id)
 VALUES (2, 5);
+
+--SELECT * FROM products join categories
+
+SELECT * FROM products
+JOIN categories_products
+ON products.id = categories_products.product_id
+JOIN categories
+ON categories.id = categories_products.category_id
+
+--SELECT * FROM users join orders join orders_products join products
+
+SELECT * FROM users
+JOIN orders
+ON users.id = orders.user_id
+JOIN orders_products
+ON orders_products.order_id = orders.id
+JOIN products
+ON orders_products.product_id = products.id
+
+--SELECT * from users join carts join carts_products join products
+
+SELECT * FROM users
+JOIN carts
+ON users.id = carts.user_id
+JOIN carts_products
+ON carts_products.cart_id = carts.id
+JOIN products
+ON carts_products.product_id = products.id
