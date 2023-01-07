@@ -86,3 +86,39 @@ INSERT INTO categories_products (category_id, product_id)
 VALUES(2, 5);
 
 
+--map orders to users with linking table
+
+INSERT INTO orders_products (order_id, product_id)
+VALUES (1, 1);
+
+INSERT INTO orders_products (order_id, product_id)
+VALUES (1, 4);
+
+INSERT INTO orders_products (order_id, product_id)
+VALUES (2, 5);
+
+INSERT INTO orders_products (order_id, product_id)
+VALUES (3, 1);
+
+INSERT INTO orders_products (order_id, product_id)
+VALUES (4, 4);
+
+INSERT INTO orders_products (order_id, product_id)
+VALUES (5, 2);
+
+INSERT INTO orders_products (order_id, product_id)
+VALUES (5, 3);
+
+INSERT INTO orders_products (order_id, product_id)
+VALUES (5, 4);
+
+INSERT INTO orders_products (order_id, product_id)
+VALUES (5, 5);
+
+-- two active carts with products in them
+
+INSERT INTO carts_products (cart_id, product_id)
+VALUES (1, 5);
+
+INSERT INTO carts_products (cart_id, product_id)
+VALUES (2, 5);

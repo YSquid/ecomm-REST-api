@@ -38,11 +38,12 @@ CREATE TABLE categories_products (
     PRIMARY KEY (category_id, product_id)
 );
 
-CREATE TABLE orders_users (
-    order_id INTEGER REFERENCES orders(id) NOT NULL,
-    users_id INTEGER REFERENCES users(id) NOT NULL,
-    PRIMARY KEY (order_id, users_id)
-);
+--this table was redundent with orders
+-- CREATE TABLE orders_users (
+--     order_id INTEGER REFERENCES orders(id) NOT NULL,
+--     users_id INTEGER REFERENCES users(id) NOT NULL,
+--     PRIMARY KEY (order_id, users_id)
+-- );
 
 CREATE TABLE orders_products (
     order_id INTEGER REFERENCES orders(id) NOT NULL,
@@ -52,6 +53,6 @@ CREATE TABLE orders_products (
 
 CREATE TABLE carts_products (
     cart_id INTEGER REFERENCES carts(id) NOT NULL,
-    product_id INTEGER REFERENCES product(id) NOT NULL,
+    product_id INTEGER REFERENCES products(id) NOT NULL,
     PRIMARY KEY (cart_id, product_id)
 );
