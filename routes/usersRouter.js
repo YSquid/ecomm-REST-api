@@ -5,12 +5,13 @@ const db = require('../db/index.js')
 
 module.exports = usersRouter;
 
-//GET all users
+//GET all users - json example file
 // usersRouter.get('/', (req, res) => {
 //     const users = usersJSON
 //     res.send(users)
 // })
 
+//GET all users - psql database
 usersRouter.get('/', db.getUsers)
 
 //GET user by id
