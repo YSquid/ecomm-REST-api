@@ -1,34 +1,12 @@
 const express = require('express')
 const usersRouter = express.Router();
 const usersJSON = require('../json_db/users.json')
-const db = require('../db/index.js')
+const db_users = require('../db/db_users.js')
 
 module.exports = usersRouter;
 
-//GET all users - json example file
-// usersRouter.get('/', (req, res) => {
-//     const users = usersJSON
-//     res.send(users)
-// })
-
 //GET all users - psql database
-usersRouter.get('/', db.getUsers)
+usersRouter.get('/', db_users.getUsers)
 
-//GET user by id
-usersRouter.get("/:id", (req, res) => {
-    const { id } = req.params;
-  
-    const filteredUsers = usersJSON.users.filter((user) => {
-      return user.id == id;
-    });
-  
-    if (filteredUsers.length > 0) {
-      res.status(200).send(filteredUsers);
-    } else {
-      res
-        .status(404)
-        .send(
-          "Resource not found. Ensure the url is correct and you are connected to the internet."
-        );
-    }
-  });
+//GET user by id - psql database
+usersRouter.get('/:id', db_users.getUserById)

@@ -1,13 +1,13 @@
 {
   "users": [
     {
-      "id": "U001",
+      "id": "1",
       "firstname": "Susan",
       "lastname": "Alberts",
       "cartid": "C001"
     },
     {
-      "id": "U002",
+      "id": "2",
       "firstname": "Antoine",
       "lastname": "Jackson",
       "cartid": "C002"
