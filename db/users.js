@@ -14,7 +14,7 @@ const getUserById = (req, res) => {
     const {id} = req.params
     pool.query("SELECT * FROM users WHERE id = $1", [id], (error, results) => {
         if (error) {
-            throw error;
+            throw error
         }
     
         res.status(200).json(results.rows)

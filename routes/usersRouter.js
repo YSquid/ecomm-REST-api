@@ -1,7 +1,6 @@
 const express = require('express')
 const usersRouter = express.Router();
-const usersJSON = require('../json_db/users.json')
-const db_users = require('../db/db_users.js')
+const db_users = require('../db/users.js')
 
 module.exports = usersRouter;
 

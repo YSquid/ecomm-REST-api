@@ -18,6 +18,11 @@ app.get('/', (req, res) => {
     res.send('Hello Express!')
 })
 
+app.use((err, req, res, next) => {
+    console.error(err.stack)
+    res.status(500).send('Bad request')
+})
+
 app.listen(PORT, () => {
     console.log(`App listening on port: ${PORT}`)
     // console.log(process.env) -- confirming process.env object
