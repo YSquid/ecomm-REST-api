@@ -1,14 +1,17 @@
 const express = require('express')
 const usersRouter = express.Router();
 const usersJSON = require('../json_db/users.json')
+const db = require('../db/index.js')
 
 module.exports = usersRouter;
 
 //GET all users
-usersRouter.get('/', (req, res) => {
-    const users = usersJSON
-    res.send(users)
-})
+// usersRouter.get('/', (req, res) => {
+//     const users = usersJSON
+//     res.send(users)
+// })
+
+usersRouter.get('/', db.getUsers)
 
 //GET user by id
 usersRouter.get("/:id", (req, res) => {

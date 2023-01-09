@@ -9,7 +9,7 @@ const bodyParser = require('body-parser');
 app.use(bodyParser.json());
 
 //Mount apiRouter (from routes/api) at '/api' path
-const apiRouter  = require('../routes/api');
+const apiRouter  = require('./routes/api');
 app.use("/api", apiRouter)
 
 //Homepage route
