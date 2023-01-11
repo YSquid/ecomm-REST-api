@@ -11,8 +11,6 @@ apiRouter.use('/products/', productsRouter)
 apiRouter.use('/users/', usersRouter)
 apiRouter.use('/orders/', ordersRouter)
 apiRouter.use('/carts/', cartsRouter)
-apiRouter.use('/error', () => {
-    'We encountered an error'
-})
+
 
 module.exports = apiRouter;
