@@ -4,8 +4,18 @@ const db_categories = require('../db/categories.js')
 
 module.exports = categoriesRouter;
 
-//GET all products
+//GET all categories
 categoriesRouter.get("/", db_categories.getCategories);
 
-//GET product by id
+//GET category by id
 categoriesRouter.get("/:id", db_categories.getCategoryById);
+
+//POST category
+categoriesRouter.post("/", db_categories.addCategory)
+
+//PUT category
+categoriesRouter.put("/:id", db_categories.updateCategory)
+
+//DELETE category
+
+categoriesRouter.delete("/:id", db_categories.deleteCategory)

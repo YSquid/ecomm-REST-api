@@ -32,7 +32,7 @@ const getProductById = (req, res, next) => {
 const addProduct = (req, res, next) => {
   const { name, description, price, stock } = req.body;
   pool.query(
-    "INSERT INTO products (name, description, price, stock) VALUES ($1, $2, $3, $4) RETURNING name, description, price, stock;",
+    "INSERT INTO products (name, description, price, stock) VALUES ($1, $2, $3, $4) RETURNING id, name, description, price, stock;",
     [name, description, price, stock],
     (error, results) => {
       if (error) {
@@ -44,11 +44,13 @@ const addProduct = (req, res, next) => {
   );
 };
 
+//PUT actions
+
 const updateProduct = (req, res, next) => {
   const { id } = req.params;
   const { name, description, price, stock } = req.body;
   pool.query(
-    "UPDATE products SET name = $2, description = $3, price = $4, stock = $5 WHERE id = $1 RETURNING name, description, price, stock",
+    "UPDATE products SET name = $2, description = $3, price = $4, stock = $5 WHERE id = $1 RETURNING id, name, description, price, stock",
     [id, name, description, price, stock],
     (error, results) => {
       if (error) {
@@ -59,6 +61,8 @@ const updateProduct = (req, res, next) => {
     }
   );
 };
+
+//DELETE actions
 
 const deleteProduct = (req, res, next) => {
   const {id} = req.params
