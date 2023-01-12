@@ -22,7 +22,7 @@ app.use((err, req, res, next) => {
   console.error(err.stack);
   res
     .status(500)
-    .send("Bad request - check the url and path paramters you are sending");
+    .send("Bad request - check the url and path paramters you are sending. Error message:" + err);
 });
 
 app.listen(PORT, () => {

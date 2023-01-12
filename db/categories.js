@@ -31,7 +31,8 @@ const getCategoryById = (req, res, next) => {
 const addCategory = (req, res, next) => {
   const { name, description } = req.body;
   pool.query(
-    "INSERT INTO categories (name, description) VALUES ($1, $2) RETURNING id, name, description;",
+    `INSERT INTO categories (name, description) 
+    VALUES ($1, $2) RETURNING id, name, description;`,
     [name, description],
     (error, results) => {
       if (error) {
