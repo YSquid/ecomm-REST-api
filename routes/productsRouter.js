@@ -9,3 +9,9 @@ productsRouter.get("/", db_products.getProducts);
 
 //GET product by id
 productsRouter.get("/:id", db_products.getProductById);
+
+//POST product
+productsRouter.post('/', db_products.addProduct)
+
+//PUT product
+productsRouter.put('/:id', db_products.updateProduct)
