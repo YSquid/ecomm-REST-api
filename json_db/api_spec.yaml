@@ -8,12 +8,12 @@ servers:
 - url: /
 paths:
   /products:
-    summary: GET all products
-    description: This path is used to retrieve all products from the products table.
+    summary: Path for operations related to products. GET and POST on this path.
+    description: Retrieve all products with GET and add new products with POST.
     get:
       tags:
       - Products
-      summary: GET all products data
+      summary: Retrieve all products data
       description: Retrieve all products data from the products table
       operationId: get_products
       responses:
@@ -25,14 +25,16 @@ paths:
                 get_products_success:
                   value:
                     products:
-                    - id: P001
+                    - id: 1
                       name: Baseball Bat
-                      description: A wodden baseball bat
-                      price: "39.99"
-                    - id: P002
-                      name: Baseball Glove
-                      description: A leather baseball glove
-                      price: "69.99"
+                      description: 28 inch wooden baseball bat
+                      price: 39.99
+                      stock: 25
+                    - id: 2
+                      name: Basketball
+                      description: Official size 7 (29.5 inch) basketball
+                      price: 35.99
+                      stock: 16
         "404":
           description: 404 error - resource not found
           content:
@@ -40,13 +42,46 @@ paths:
               examples:
                 get_products_404:
                   value: Resource not found. Ensure the url is correct and you are connected to the internet.
+    post:
+      tags:
+      - Products
+      summary: Add a new product
+      description: This path is used to add a new product to the products table.
+      operationId: post_products
+      requestBody:
+        description: A new product object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Product'
+            example:
+              id: 5
+              name: Soccer Ball
+              description: Regulation sized soccer ball
+              price: 30.5
+              stock: 100
+      responses:
+        "201":
+          description: Success
+          content:
+            text/plain; charset=utf-8:
+              examples:
+                post_products_success:
+                  value: Product added
+        "400":
+          description: 400 error - Bad request
+          content:
+            text/plain; charset=utf-8:
+              examples:
+                post_products_400:
+                  value: Cannot complete request. Verify url and request body.
   /products/{id}:
-    summary: Products by id actions
-    description: This path is used for GET, PUT, and DELETE actions against a product by id.
+    summary: Path for operations related to products by id. GET, PUT, and DELETE on this path.
+    description: Retrieve a product by id with GET, update a product by id with PUT, and delete a product by id with DELETE.
     get:
       tags:
       - Products
-      summary: GET a product by id
+      summary: Retrieve a product by id
       description: Retrieve the product with matching id from the products table
       operationId: get_products_id
       parameters:
@@ -66,10 +101,11 @@ paths:
               examples:
                 get_products_id_success:
                   value:
-                    id: P001
+                    id: 1
                     name: Baseball Bat
-                    description: A wooden baseball bat
-                    price: "39.99"
+                    description: 28 inch wooden baseball bat
+                    price: 39.99
+                    stock: 25
         "404":
           description: 404 error - resource not found
           content:
@@ -77,13 +113,253 @@ paths:
               examples:
                 get_products_id_404:
                   value: Resource not found. Ensure the url is correct and you are connected to the internet.
+    put:
+      tags:
+      - Products
+      summary: Update a product by id
+      description: This path is used to update a product by id in the products table
+      operationId: put_products_id
+      parameters:
+      - name: id
+        in: path
+        description: the id of the product
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        description: An updated product Object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Product'
+            example:
+              id: 5
+              name: Soccer Ball
+              description: White and black soccer ball with butyl bladder
+              price: 29.99
+              stock: 95
+      responses:
+        "200":
+          description: Success
+          content:
+            text/plain; charset=utf-8:
+              examples:
+                put_products_id_success:
+                  value: Product updated
+        "400":
+          description: 400 error - Bad request
+          content:
+            text/plain; charset=utf-8:
+              examples:
+                put_products_id_400:
+                  value: Cannot complete request. Verify url and request body.
+    delete:
+      tags:
+      - Products
+      summary: Delete product by id
+      description: This path is used to delete a product by id from the products table
+      operationId: delete_products_id
+      parameters:
+      - name: id
+        in: path
+        description: The id of the product
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "204":
+          description: Success
+          content:
+            text/plain; charset=utf-8:
+              examples:
+                delete_products_id_success:
+                  value: Product deleted
+        "400":
+          description: 400 error - Bad request
+          content:
+            text/plain; charset=utf-8:
+              examples:
+                delete_products_id_400:
+                  value: Cannot complete request. Verify url.
+  /categories:
+    summary: Path for operations related to categories. GET and POST on this path.
+    description: Retrieve all categories with GET and add new categories with POST.
+    get:
+      tags:
+      - Categories
+      summary: Retrieve all categories data
+      description: Retrieve all categories data from the categories table
+      operationId: get_categories
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              examples:
+                get_categories_success:
+                  value:
+                    categories:
+                    - id: 1
+                      name: Baseball
+                      description: Equipment and accessories for baseball
+                    - id: 2
+                      name: Basketball
+                      description: Equipment and accessories for basketball
+        "404":
+          description: 404 error - resource not found
+          content:
+            text/plain; charset=utf-8:
+              examples:
+                get_categories_404:
+                  value: Resource not found. Ensure the url is correct and you are connected to the internet.
+    post:
+      tags:
+      - Categories
+      summary: Add a new category
+      description: This path is used to add a new category to the categories table.
+      operationId: post_categories
+      requestBody:
+        description: A new category object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Category'
+            example:
+              id: 3
+              name: Football
+              description: Equipment and accessories for American and Canadian football
+      responses:
+        "201":
+          description: Success
+          content:
+            text/plain; charset=utf-8:
+              examples:
+                post_categories_success:
+                  value: Category added
+        "400":
+          description: 400 error - Bad request
+          content:
+            text/plain; charset=utf-8:
+              examples:
+                post_categories_400:
+                  value: Cannot complete request. Verify url and request body.
+  /categories/{id}:
+    summary: Path for operations related to categories by id. GET, PUT, and DELETE on this path.
+    description: Retrieve a category by id with GET, update a category by id with PUT, and delete a category by id with DELETE.
+    get:
+      tags:
+      - Categories
+      summary: Retrieve a category by id
+      description: Retrieve the category with matching id from the categories table
+      operationId: get_categories_id
+      parameters:
+      - name: id
+        in: path
+        description: The id of the category.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              examples:
+                get_categories_id_success:
+                  value:
+                    id: 1
+                    name: Baseball
+                    description: Equipment and accessories for baseball
+        "404":
+          description: 404 error - resource not found
+          content:
+            text/plain; charset=utf-8:
+              examples:
+                get_categories_id_404:
+                  value: Resource not found. Ensure the url is correct and you are connected to the internet.
+    put:
+      tags:
+      - Categories
+      summary: Update a category by id
+      description: This path is used to update a category by id in the categories table
+      operationId: put_categories_id
+      parameters:
+      - name: id
+        in: path
+        description: the id of the category
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        description: An updated category Object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Category'
+            example:
+              id: 3
+              name: Football
+              description: Equipment and accessories for American, Australian, and Canadian football
+      responses:
+        "200":
+          description: Success
+          content:
+            text/plain; charset=utf-8:
+              examples:
+                put_categories_id_success:
+                  value: Product updated
+        "400":
+          description: 400 error - Bad request
+          content:
+            text/plain; charset=utf-8:
+              examples:
+                put_categories_id_400:
+                  value: Cannot complete request. Verify url and request body.
+    delete:
+      tags:
+      - Categories
+      summary: Delete category by id
+      description: This path is used to delete a category by id from the categories table
+      operationId: delete_categories_id
+      parameters:
+      - name: id
+        in: path
+        description: The id of the category
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "204":
+          description: Success
+          content:
+            text/plain; charset=utf-8:
+              examples:
+                delete_categories_id_success:
+                  value: Category deleted
+        "400":
+          description: 400 error - Bad request
+          content:
+            text/plain; charset=utf-8:
+              examples:
+                delete_categories_id_400:
+                  value: Cannot complete request. Verify url.
   /users:
-    summary: GET all users
-    description: This path is used to retrieve all users from the users table.
+    summary: Path for operations related to users. GET and POST on this path.
+    description: Retrieve all users with GET and add new users with POST.
     get:
       tags:
       - Users
-      summary: GET all users
+      summary: Retrieve all users
       description: This path is used to retrieve all users from the users table.
       operationId: get_users
       responses:
@@ -95,14 +371,20 @@ paths:
                 get_users_success:
                   value:
                     users:
-                    - id: U001
-                      firstname: Susan
-                      lastname: Alberts
-                      cartid: C001
-                    - id: U002
-                      firstname: Antoine
-                      lastname: Jackson
-                      cartid: C002
+                    - id: 1
+                      first_name: Paul
+                      lastname: Adams
+                      address: 123 Elm Lane
+                      province_state: PA
+                      country: US
+                      city: Pittsburgh
+                    - id: 2
+                      first_name: Ezra
+                      lastname: Meeks
+                      address: 87 Yonge Street
+                      province_state: true
+                      country: CA
+                      city: Toronto
         "404":
           description: 404 error - resource not found
           content:
@@ -111,14 +393,49 @@ paths:
                 get_users_404:
                   value: |-
                     Resource not found. Ensure the url is correct and you are
-                     connected to the internet.
+                    connected to the internet.
+    post:
+      tags:
+      - Users
+      summary: Add a new user
+      description: This path is used to add a new user to the users table
+      operationId: post_users
+      requestBody:
+        description: A new user object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Users'
+            example:
+              id: 5
+              first_name: Elliot
+              last_name: Goldstein
+              address: 187 Park Avenue
+              province_state: NY
+              country: US
+              city: New York
+      responses:
+        "201":
+          description: Success
+          content:
+            text/plain; charset=utf-8:
+              examples:
+                post_users_success:
+                  value: User added
+        "400":
+          description: 400 error - Bad request
+          content:
+            text/plain; charset=utf-8:
+              examples:
+                post_users_400:
+                  value: Cannot complete request. Verify url and request body.
   /users/{id}:
-    summary: Users by id actions
-    description: This path is used for GET, PUT, and DELETE actions against a user by id.
+    summary: Path for operations related to users by id. GET, PUT, and DELETE on this path.
+    description: Retrieve a user by id with GET, update a user by id with PUT, and delete a user by id with DELETE.
     get:
       tags:
       - Users
-      summary: GET user by id
+      summary: Retrieve user by id
       description: Retrieve a user with matching id from the users table.
       operationId: get_users_id
       parameters:
@@ -138,10 +455,13 @@ paths:
               examples:
                 get_users_id_success:
                   value:
-                    id: U001
-                    firstname: Susan
-                    lastname: Alberts
-                    cartid: C001
+                  - id: 1
+                    first_name: Paul
+                    lastname: Adams
+                    address: 123 Elm Lane
+                    province_state: PA
+                    country: US
+                    city: Pittsburgh
         "404":
           description: 404 error - resource not found
           content:
@@ -149,13 +469,87 @@ paths:
               examples:
                 get_users_id_404:
                   value: Resource not found. Ensure the url is correct and you are connected to the internet.
+    put:
+      tags:
+      - Users
+      summary: Update user by id
+      description: This path is used to update a user by id in the users table
+      operationId: put_users_id
+      parameters:
+      - name: id
+        in: path
+        description: the id of the user
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        description: A new user object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Users'
+            example:
+              id: 5
+              first_name: Elliot
+              last_name: Goldstein
+              address: 265 5th Avenue
+              province_state: NY
+              country: US
+              city: New York
+      responses:
+        "200":
+          description: Success
+          content:
+            text/plain; charset=utf-8:
+              examples:
+                put_users_id_success:
+                  value: User updated
+        "400":
+          description: 400 error - Bad request
+          content:
+            text/plain; charset=utf-8:
+              examples:
+                put_users_id_400:
+                  value: Cannot complete request. Verify url and request body.
+    delete:
+      tags:
+      - Users
+      summary: Delete user by id
+      description: This path is used to delete a user by id in the users table
+      operationId: delete_users_id
+      parameters:
+      - name: id
+        in: path
+        description: the id of the user
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "204":
+          description: Success
+          content:
+            text/plain; charset=utf-8:
+              examples:
+                delete_users_id_success:
+                  value: User deleted
+        "400":
+          description: 400 error - Bad request
+          content:
+            text/plain; charset=utf-8:
+              examples:
+                delete_users_id_400:
+                  value: Cannot complete request. Verify url.
   /orders:
-    summary: GET all orders
-    description: This path is used to retrieve all orders from the orders table.
+    summary: Path for operations related to orders. GET and POST on this path.
+    description: Retrieve all orders with GET and add new orders with POST.
     get:
       tags:
       - Orders
-      summary: GET all orders
+      summary: Retrieve all orders
       description: This path is used to retrieve all orders from the orders table.
       operationId: get_orders
       responses:
@@ -167,17 +561,10 @@ paths:
                 get_orders_success:
                   value:
                     orders:
-                    - id: O001
-                      userid: U001
-                      productids:
-                      - P001
-                      orderdate: 2023-01-01
-                    - id: O002
-                      userid: U002
-                      productids:
-                      - P001
-                      - P002
-                      orderdate: 2022-12-29
+                    - id: 1
+                      userid: 1
+                    - id: 2
+                      userid: 1
         "404":
           description: 404 error - resource not found
           content:
@@ -185,13 +572,43 @@ paths:
               examples:
                 get_orders_404:
                   value: Resource not found. Ensure the url is correct and you are connected to the internet.
+    post:
+      tags:
+      - Orders
+      summary: Add a new order
+      description: This path is used to add a new order to the orders table
+      operationId: post_orders
+      requestBody:
+        description: A new order object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Orders'
+            example:
+              id: 6
+              user_id: 3
+      responses:
+        "201":
+          description: Success
+          content:
+            text/plain; charset=utf-8:
+              examples:
+                post_orders_success:
+                  value: Order added
+        "400":
+          description: 400 error - Bad reqeuest
+          content:
+            text/plain; charset=utf-8:
+              examples:
+                post_orders_400:
+                  value: Cannot complete request. Verify url and request body.
   /orders/{id}:
-    summary: Orders by id actions
-    description: This path is used for GET, PUT, and DELETE actions against an order by id.
+    summary: Path for operations related to orders by id. GET, PUT, and DELETE on this path.
+    description: Retrieve an order by id with GET, update an order by id with PUT, and delete an order by id with DELETE.
     get:
       tags:
       - Orders
-      summary: GET order by id
+      summary: Retrieve order by id
       description: Retrieve an order with matching id from the orders table
       operationId: get_orders_id
       parameters:
@@ -211,11 +628,8 @@ paths:
               examples:
                 get_orders_id_success:
                   value:
-                    id: O001
-                    userid: U001
-                    productids:
-                    - P001
-                    orderdate: 2023-01-01
+                    id: 1
+                    userid: 1
         "404":
           description: 404 error - resource not found
           content:
@@ -223,19 +637,147 @@ paths:
               examples:
                 get_orders_id_404:
                   value: Resource not found. Ensure the url is correct and you are connected to the internet.
-  /carts/{userid}:
-    summary: GET the cart for a specific user
-    description: This path returns the current cart for the User id specified
+    put:
+      tags:
+      - Orders
+      summary: Update order by id
+      description: This path is used to update an order by id in the orders table
+      operationId: put_orders_id
+      parameters:
+      - name: id
+        in: path
+        description: the id of the order
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        description: A new order object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Orders'
+            example:
+              id: 6
+              user_id: 2
+      responses:
+        "200":
+          description: Success
+          content:
+            text/plain; charset=utf-8:
+              examples:
+                put_orders_id_success:
+                  value: Order updated
+        "400":
+          description: 400 error - Bad request
+          content:
+            text/plain; charset=utf-8:
+              examples:
+                put_orders_id_400:
+                  value: Cannot complete request. Verify url and request body.
+    delete:
+      tags:
+      - Orders
+      summary: Delete order by id
+      description: This path is used to delete an order by id in the orders table
+      operationId: delete_orders_id
+      parameters:
+      - name: id
+        in: path
+        description: the id of the order
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "204":
+          description: Success
+          content:
+            text/plain; charset=utf-8:
+              examples:
+                delete_users_id_success:
+                  value: Order deleted
+        "400":
+          description: 400 error - Bad request
+          content:
+            text/plain; charset=utf-8:
+              examples:
+                delete_users_id_400:
+                  value: Cannot complete request. Verify url.
+  /carts:
+    summary: Path for operations related to carts. GET and POST on this path.
+    description: Retrieve all carts with GET and add new cart with POST.
     get:
       tags:
       - Carts
-      summary: GET the cart for a specific user
-      description: This path returns the current cart from the joined table users ON carts - joined on users.userid = carts.userid
+      summary: Retrieve all carts
+      description: This path is used to retrieve all carts from the carts table.
+      operationId: get_carts
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              examples:
+                get_carts_success:
+                  value:
+                    carts:
+                    - id: 1
+                      userid: 1
+                    - id: 2
+                      userid: 2
+        "404":
+          description: 404 error - resource not found
+          content:
+            text/plain; charset=utf-8:
+              examples:
+                get_carts_404:
+                  value: Resource not found. Ensure the url is correct and you are connected to the internet.
+    post:
+      tags:
+      - Carts
+      summary: Add a new cart
+      description: This path is used to add a new cart to the carts table
+      operationId: post_carts
+      requestBody:
+        description: A new cart object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Carts'
+            example:
+              id: 6
+              user_id: 6
+      responses:
+        "201":
+          description: Success
+          content:
+            text/plain; charset=utf-8:
+              examples:
+                post_carts_success:
+                  value: Cart added
+        "400":
+          description: 400 error - Bad reqeuest
+          content:
+            text/plain; charset=utf-8:
+              examples:
+                post_carts_400:
+                  value: Cannot complete request. Verify url and request body.
+  /carts/{id}:
+    summary: Path for operations related to carts by id. GET, PUT, and DELETE on this path.
+    description: Retrieve a cart by id with GET, update a cart by id with PUT, and delete a cart by id with DELETE.
+    get:
+      tags:
+      - Carts
+      summary: Retrieve the cart by id
+      description: Retrieve a cart with matching id from the carts table
       operationId: get_carts_userid
       parameters:
-      - name: userid
+      - name: id
         in: path
-        description: the userid for the user who's cart you want to retrieve
+        description: the id of the cart
         required: true
         style: simple
         explode: false
@@ -247,17 +789,138 @@ paths:
           content:
             application/json:
               examples:
-                get_carts_userid_success:
+                get_carts_id_success:
                   value:
-                    id: C001
-                    userid: U001
-                    productids:
-                    - P001
+                    id: 1
+                    user_id: 1
         "404":
           description: 404 error - resource not found
           content:
             text/plain; charset=utf-8:
               examples:
-                get_carts_userid_404:
+                get_carts_id_404:
                   value: Resource not found. Ensure the url is correct and you are connected to the internet.
-components: {}
+    put:
+      tags:
+      - Carts
+      summary: Update cart by id
+      description: This path is used to update a cart by id in the carts table
+      operationId: put_carts_id
+      parameters:
+      - name: id
+        in: path
+        description: the id of the cart
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        description: A new cart object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Carts'
+            example:
+              id: 6
+              user_id: 5
+      responses:
+        "200":
+          description: Success
+          content:
+            text/plain; charset=utf-8:
+              examples:
+                put_carts_id_success:
+                  value: Cart updated
+        "400":
+          description: 400 error - Bad request
+          content:
+            text/plain; charset=utf-8:
+              examples:
+                put_carts_id_400:
+                  value: Cannot complete request. Verify url and request body.
+    delete:
+      tags:
+      - Carts
+      summary: Delete cart by id
+      description: This path is used to delete a cart by id in the carts table
+      operationId: delete_carts_id
+      parameters:
+      - name: id
+        in: path
+        description: the id of the cart
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "204":
+          description: Success
+          content:
+            text/plain; charset=utf-8:
+              examples:
+                delete_carts_id_success:
+                  value: Cart deleted
+        "400":
+          description: 400 error - Bad request
+          content:
+            text/plain; charset=utf-8:
+              examples:
+                delete_carts_id_400:
+                  value: Cannot complete request. Verify url.
+components:
+  schemas:
+    Product:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        description:
+          type: string
+        price:
+          type: number
+        stock:
+          type: integer
+    Category:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        description:
+          type: string
+    Users:
+      type: object
+      properties:
+        id:
+          type: integer
+        first_name:
+          type: string
+        last_name:
+          type: string
+        address:
+          type: string
+        province_state:
+          type: string
+        country:
+          type: string
+        city:
+          type: string
+    Orders:
+      type: object
+      properties:
+        id:
+          type: integer
+        user_id:
+          type: integer
+    Carts:
+      type: object
+      properties:
+        id:
+          type: integer
+        userid:
+          type: integer
