@@ -15,3 +15,7 @@ productsRouter.post('/', db_products.addProduct)
 
 //PUT product
 productsRouter.put('/:id', db_products.updateProduct)
+
+//DELETE product
+
+productsRouter.delete('/:id', db_products.deleteProduct)

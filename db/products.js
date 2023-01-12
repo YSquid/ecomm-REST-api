@@ -60,10 +60,26 @@ const updateProduct = (req, res, next) => {
   );
 };
 
+const deleteProduct = (req, res, next) => {
+  const {id} = req.params
+  pool.query(
+    "DELETE FROM products WHERE id = $1",
+    [id],
+    (error) => {
+      if (error) {
+        next(error)
+      } else {
+        res.status(200).send(`Product with id: ${id} deleted`)
+      }
+    }
+  )
+}
+
 //exports
 module.exports = {
   getProducts,
   getProductById,
   addProduct,
-  updateProduct
+  updateProduct,
+  deleteProduct
 };
