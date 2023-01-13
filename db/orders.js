@@ -106,11 +106,26 @@ const ordersProducts = (req, res, next) => {
         if (error) {
           next (error)
         } else {
-          res.send(results.rows)
+          return
         }
       }
     )
   }
+  next();
+}
+
+const clearCart = (req, res, next) => {
+  pool.query(
+    `DELETE FROM carts_products WHERE cart_id = $1`,
+    [res.locals.cart_id],
+    (error, results) => {
+      if (error) {
+        next (error)
+      } else {
+        res.send('Products cleared from cart')
+      }
+    }
+  )
 }
 
 //PUT actions
@@ -152,6 +167,7 @@ module.exports = {
   cartsProducts,
   createOrder,
   ordersProducts,
+  clearCart,
   updateOrder,
   deleteOrder,
 };
