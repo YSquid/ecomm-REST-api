@@ -68,7 +68,7 @@ const deleteUser = (req, res, next) => {
     if (error) {
       next(error);
     } else {
-      res.status(200).send(`Category with id: ${id} deleted`);
+      res.status(200).send(`User with id: ${id} deleted`);
     }
   });
 };

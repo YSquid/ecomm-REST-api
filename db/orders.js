@@ -39,6 +39,76 @@ const addOrder = (req, res, next) => {
   );
 };
 
+//Create order from carts/checkout/:id route
+
+const cartInfo = (req, res, next) => {
+  res.locals.cart_id = req.params.id;
+  pool.query(
+    `SELECT user_id FROM carts WHERE id = $1`,
+    [res.locals.cart_id],
+    (error, results) => {
+      if (error) {
+        next(error);
+      } else if (results.rows[0]){
+        res.locals.user_id = results.rows[0].user_id
+        next();
+      } else {
+        res.send("No Cart Found.")
+      }
+    }
+  );
+};
+
+const cartsProducts = (req, res, next) => {
+  pool.query(
+    `SELECT product_id FROM carts_products WHERE cart_id = $1`,
+    [res.locals.user_id],
+    (error, results) => {
+      if (error) {
+        next (error)
+      } else {
+        res.locals.product_ids = results.rows.map((product) => {
+          return product.product_id
+        })
+        next();
+      }
+    }
+  )
+};
+
+const createOrder = (req, res, next) => {
+  pool.query(
+    `INSERT INTO orders (user_id)
+    VALUES ($1) RETURNING id, user_id`,
+    [res.locals.user_id],
+    (error, results) => {
+      if (error) {
+        next (error)
+      } else {
+        res.locals.order_id = results.rows[0].id
+        next();
+      }
+    }
+  )
+}
+
+const ordersProducts = (req, res, next) => {
+  for (let i = 0; i < res.locals.product_ids.length; i++) {
+    pool.query(
+      `INSERT INTO orders_products (order_id, product_id)
+      VALUES ($1, $2) RETURNING order_id, product_id`,
+      [res.locals.order_id, res.locals.product_ids[i]],
+      (error, results) => {
+        if (error) {
+          next (error)
+        } else {
+          res.send(results.rows)
+        }
+      }
+    )
+  }
+}
+
 //PUT actions
 
 const updateOrder = (req, res, next) => {
@@ -60,24 +130,24 @@ const updateOrder = (req, res, next) => {
 //DELETE actions
 
 const deleteOrder = (req, res, next) => {
-  const {id} = req.params
-  pool.query(
-    "DELETE FROM orders WHERE id = $1",
-    [id],
-    (error) => {
-      if (error) {
-        next(error)
-      } else {
-        res.status(200).send(`Order with id: ${id} deleted`)
-      }
+  const { id } = req.params;
+  pool.query("DELETE FROM orders WHERE id = $1", [id], (error) => {
+    if (error) {
+      next(error);
+    } else {
+      res.status(200).send(`Order with id: ${id} deleted`);
     }
-  )
-}
+  });
+};
 
 module.exports = {
   getOrders,
   getOrderById,
   addOrder,
+  cartInfo,
+  cartsProducts,
+  createOrder,
+  ordersProducts,
   updateOrder,
-  deleteOrder
+  deleteOrder,
 };

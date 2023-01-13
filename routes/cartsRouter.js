@@ -1,6 +1,7 @@
 const express = require("express");
 const cartsRouter = express.Router();
 const db_carts = require("../db/carts.js");
+const db_orders = require("../db/orders.js");
 
 module.exports = cartsRouter;
 
@@ -12,6 +13,13 @@ cartsRouter.get("/:id", db_carts.getCartById);
 
 //POST cart
 cartsRouter.post("/", db_carts.addProductToCart);
+cartsRouter.post(
+  "/checkout/:id",
+  db_orders.cartInfo,
+  db_orders.cartsProducts,
+  db_orders.createOrder,
+  db_orders.ordersProducts
+);
 
 //PUT cart
 cartsRouter.put("/:id", db_carts.updateCart);
