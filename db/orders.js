@@ -41,6 +41,7 @@ const addOrder = (req, res, next) => {
 
 //Create order from carts/checkout/:id route
 
+//Looks up and passes the user_id associated with the cart
 const cartInfo = (req, res, next) => {
   res.locals.cart_id = req.params.id;
   pool.query(
@@ -59,6 +60,7 @@ const cartInfo = (req, res, next) => {
   );
 };
 
+//Gets all products associated with the cart and passes as an array
 const cartsProducts = (req, res, next) => {
   pool.query(
     `SELECT product_id FROM carts_products WHERE cart_id = $1`,
@@ -76,6 +78,7 @@ const cartsProducts = (req, res, next) => {
   )
 };
 
+//Creates an order with the associated user_id
 const createOrder = (req, res, next) => {
   pool.query(
     `INSERT INTO orders (user_id)
@@ -92,6 +95,7 @@ const createOrder = (req, res, next) => {
   )
 }
 
+//Creates rows in orders products with the order_id and product_ids
 const ordersProducts = (req, res, next) => {
   for (let i = 0; i < res.locals.product_ids.length; i++) {
     pool.query(
