@@ -19,7 +19,8 @@ cartsRouter.post(
   db_orders.cartsProducts,
   db_orders.createOrder,
   db_orders.ordersProducts,
-  db_orders.clearCart
+  db_orders.clearCart,
+  db_orders.updateStock
 );
 
 //PUT cart

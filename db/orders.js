@@ -116,6 +116,7 @@ const ordersProducts = (req, res, next) => {
   next();
 };
 
+//Clear the users cart
 const clearCart = (req, res, next) => {
   pool.query(
     `DELETE FROM carts_products WHERE cart_id = $1`,
@@ -124,11 +125,41 @@ const clearCart = (req, res, next) => {
       if (error) {
         next(error);
       } else {
-        res.send("Products cleared from cart");
+        next();
       }
     }
   );
 };
+
+//Update stock in products table
+const updateStock = (req, res, next) => {
+  res.locals.products.forEach((product) => {
+    pool.query(
+      `UPDATE products SET stock = (stock - $2) WHERE id = $1`,
+      [product.product_id, product.product_count],
+      (error, results) => {
+        if (error) {
+          next (error)
+        } else {
+          return
+        }
+      }
+    )
+  })
+  res.send('Stock Updated')
+};
+
+// for (let i = 0; i <= res.locals.products.length; i++) {
+//   pool.query(`UPDATE products SET stock = (stock - $2) WHERE id = $1`),
+//     [res.locals.products[i].product_id, res.locals.products[i].product_count],
+//     (error, results) => {
+//       if (error) {
+//         next(error);
+//       } else {
+//         res.status(200).send("Order Complete");
+//       }
+//     };
+// }
 
 //PUT actions
 
@@ -170,6 +201,7 @@ module.exports = {
   createOrder,
   ordersProducts,
   clearCart,
+  updateStock,
   updateOrder,
   deleteOrder,
 };
