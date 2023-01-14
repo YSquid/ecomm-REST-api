@@ -149,18 +149,6 @@ const updateStock = (req, res, next) => {
   res.send('Stock Updated')
 };
 
-// for (let i = 0; i <= res.locals.products.length; i++) {
-//   pool.query(`UPDATE products SET stock = (stock - $2) WHERE id = $1`),
-//     [res.locals.products[i].product_id, res.locals.products[i].product_count],
-//     (error, results) => {
-//       if (error) {
-//         next(error);
-//       } else {
-//         res.status(200).send("Order Complete");
-//       }
-//     };
-// }
-
 //PUT actions
 
 const updateOrder = (req, res, next) => {

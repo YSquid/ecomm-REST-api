@@ -78,6 +78,39 @@ const updateCart = (req, res, next) => {
   );
 };
 
+const addOneToCart = (req, res, next) => {
+  const {cart_id, product_id} = req.query
+  pool.query(
+    `UPDATE carts_products SET product_count = (product_count + 1) WHERE cart_id = $1 AND product_id = $2
+    RETURNING cart_id, product_id, product_count`,
+    [cart_id, product_id],
+    (error, results) => {
+      if (error) {
+        next(error)
+      } else {
+        res.send(results.rows)
+      }
+    }
+  )
+}
+
+const subtractOneFromCart = (req, res, next) => {
+  const {cart_id, product_id} = req.query
+  pool.query(
+    `UPDATE carts_products SET product_count = (product_count - 1) WHERE cart_id = $1 AND product_id = $2
+    RETURNING cart_id, product_id, product_count`,
+    [cart_id, product_id],
+    (error, results) => {
+      if (error) {
+        next(error)
+      } else {
+        res.send(results.rows)
+      }
+    }
+  )
+}
+
+
 //DELETE actions
 
 const deleteCart = (req, res, next) => {
@@ -96,5 +129,7 @@ module.exports = {
   getCartById,
   addProductToCart,
   updateCart,
+  addOneToCart,
+  subtractOneFromCart,
   deleteCart,
 };

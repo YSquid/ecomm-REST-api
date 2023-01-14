@@ -24,7 +24,9 @@ cartsRouter.post(
 );
 
 //PUT cart
-cartsRouter.put("/:id", db_carts.updateCart);
+cartsRouter.put("/updatecart/:id", db_carts.updateCart)
+cartsRouter.put('/plusone/', db_carts.addOneToCart);
+cartsRouter.put('/minusone/', db_carts.subtractOneFromCart)
 
 //DELETE cart
 cartsRouter.delete("/:id", db_carts.deleteCart);
