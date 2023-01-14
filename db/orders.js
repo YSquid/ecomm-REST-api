@@ -50,69 +50,71 @@ const cartInfo = (req, res, next) => {
     (error, results) => {
       if (error) {
         next(error);
-      } else if (results.rows[0]){
-        res.locals.user_id = results.rows[0].user_id
+      } else if (results.rows[0]) {
+        res.locals.user_id = results.rows[0].user_id;
         next();
       } else {
-        res.send("No Cart Found.")
+        res.send("No Cart Found.");
       }
     }
   );
 };
 
-//Gets all products associated with the cart and passes as an array
+//Gets all products and counts associated with the cart and passes as an array of objects
 const cartsProducts = (req, res, next) => {
   pool.query(
-    `SELECT product_id FROM carts_products WHERE cart_id = $1`,
+    `SELECT product_id, product_count FROM carts_products WHERE cart_id = $1`,
     [res.locals.user_id],
     (error, results) => {
       if (error) {
-        next (error)
+        next(error);
       } else {
-        res.locals.product_ids = results.rows.map((product) => {
-          return product.product_id
-        })
+        res.locals.products = results.rows;
         next();
       }
     }
-  )
+  );
 };
 
 //Creates an order with the associated user_id
 const createOrder = (req, res, next) => {
   pool.query(
-    `INSERT INTO orders (user_id)
-    VALUES ($1) RETURNING id, user_id`,
+    `INSERT INTO orders (user_id, add_time)
+    VALUES ($1, current_timestamp) RETURNING id, user_id`,
     [res.locals.user_id],
     (error, results) => {
       if (error) {
-        next (error)
+        next(error);
       } else {
-        res.locals.order_id = results.rows[0].id
+        res.locals.order_id = results.rows[0].id;
         next();
       }
     }
-  )
-}
+  );
+};
 
 //Creates rows in orders products with the order_id and product_ids
 const ordersProducts = (req, res, next) => {
-  for (let i = 0; i < res.locals.product_ids.length; i++) {
+  for (let i = 0; i < res.locals.products.length; i++) {
     pool.query(
-      `INSERT INTO orders_products (order_id, product_id)
-      VALUES ($1, $2) RETURNING order_id, product_id`,
-      [res.locals.order_id, res.locals.product_ids[i]],
+      `INSERT INTO orders_products (order_id, product_id, product_count, add_time)
+      VALUES ($1, $2, $3, current_timestamp) RETURNING order_id, product_id`,
+      [
+        res.locals.order_id,
+        res.locals.products[i].product_id,
+        res.locals.products[i].product_count,
+      ],
       (error, results) => {
         if (error) {
-          next (error)
+          next(error);
         } else {
-          return
+          return;
         }
       }
-    )
+    );
   }
   next();
-}
+};
 
 const clearCart = (req, res, next) => {
   pool.query(
@@ -120,13 +122,13 @@ const clearCart = (req, res, next) => {
     [res.locals.cart_id],
     (error, results) => {
       if (error) {
-        next (error)
+        next(error);
       } else {
-        res.send('Products cleared from cart')
+        res.send("Products cleared from cart");
       }
     }
-  )
-}
+  );
+};
 
 //PUT actions
 

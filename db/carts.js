@@ -13,17 +13,13 @@ const getCarts = (req, res, next) => {
 
 const getCartById = (req, res, next) => {
   const { id } = req.params;
-  pool.query(
-    "SELECT * FROM carts WHERE id = $1",
-    [id],
-    (error, results) => {
-      if (error) {
-        next(error);
-      } else {
-        res.status(200).json(results.rows);
-      }
+  pool.query("SELECT * FROM carts WHERE id = $1", [id], (error, results) => {
+    if (error) {
+      next(error);
+    } else {
+      res.status(200).json(results.rows);
     }
-  );
+  });
 };
 
 //POST actions
@@ -47,20 +43,22 @@ const getCartById = (req, res, next) => {
 //Add item to a cart using query params
 
 const addProductToCart = (req, res, next) => {
-  const {cart_id, product_id} = req.query
+  const { cart_id, product_id, product_count } = req.query;
+
   pool.query(
-    `INSERT INTO carts_products (cart_id, product_id) VALUES ($1, $2) 
-    RETURNING cart_id, product_id;`,
-    [cart_id, product_id],
+    `INSERT INTO carts_products (cart_id, product_id, product_count, add_time) 
+    VALUES ($1, $2, $3, current_timestamp) 
+    RETURNING cart_id, product_id, product_count;`,
+    [cart_id, product_id, product_count],
     (error, results) => {
       if (error) {
-        next(error)
+        next(error);
       } else {
-        res.status(201).send(results.rows)
+        res.status(201).send(results.rows);
       }
     }
-  )
-}
+  );
+};
 
 //PUT actions
 
@@ -83,25 +81,20 @@ const updateCart = (req, res, next) => {
 //DELETE actions
 
 const deleteCart = (req, res, next) => {
-  const {id} = req.params
-  pool.query(
-    "DELETE FROM carts WHERE id = $1",
-    [id],
-    (error) => {
-      if (error) {
-        next(error)
-      } else {
-        res.status(200).send(`Cart with id: ${id} deleted`)
-      }
+  const { id } = req.params;
+  pool.query("DELETE FROM carts WHERE id = $1", [id], (error) => {
+    if (error) {
+      next(error);
+    } else {
+      res.status(200).send(`Cart with id: ${id} deleted`);
     }
-  )
-}
-
+  });
+};
 
 module.exports = {
   getCarts,
   getCartById,
   addProductToCart,
   updateCart,
-  deleteCart
+  deleteCart,
 };
