@@ -24,21 +24,6 @@ const getCartById = (req, res, next) => {
 
 //POST actions
 
-//NOT NEEDED - CARTS AUTO ADDED WITH TRIGGER ON USER ADD
-// const addCart = (req, res, next) => {
-//   const { user_id } = req.body;
-//   pool.query(
-//     `INSERT INTO carts (user_id) VALUES ($1) RETURNING id, user_id;`,
-//     [user_id],
-//     (error, results) => {
-//       if (error) {
-//         next(error);
-//       } else {
-//         res.status(201).send(results.rows);
-//       }
-//     }
-//   );
-// };
 
 //Add item to a cart using query params
 
@@ -59,6 +44,41 @@ const addProductToCart = (req, res, next) => {
     }
   );
 };
+
+//Checkout a cart and create order
+const checkoutCart = (req, res, next) => {
+  const {cart_id, user_id} = req.query
+
+  const query = 
+  `
+  WITH user_carts_products AS (
+    DELETE FROM carts_products
+      USING carts
+    WHERE carts.id = carts_products.cart_id AND carts.user_id = ${user_id}
+    RETURNING product_id, product_count
+  ),
+  current_order AS (
+    INSERT INTO orders (user_id, add_time)
+    VALUES (${user_id}, current_timestamp)
+    RETURNING id AS order_id
+  ),
+  current_order_products AS (
+    SELECT * FROM current_order
+    CROSS JOIN user_carts_products
+  )
+  
+  INSERT INTO orders_products (order_id, product_id, product_count, add_time) 
+  SELECT order_id, product_id, product_count, current_timestamp FROM current_order_products
+  RETURNING *`;
+
+  pool.query(query, (error, results) => {
+    if (error) {
+      next(error)
+    } else {
+      res.status(200).send(results.rows);
+    }
+  })
+}
 
 //PUT actions
 
@@ -131,5 +151,6 @@ module.exports = {
   updateCart,
   addOneToCart,
   subtractOneFromCart,
+  checkoutCart,
   deleteCart,
 };
