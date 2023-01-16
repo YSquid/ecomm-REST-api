@@ -24,22 +24,49 @@ const getCartById = (req, res, next) => {
 
 //POST actions
 
-
 //Add item to a cart using query params
 
 const addProductToCart = (req, res, next) => {
   const { cart_id, product_id, product_count } = req.query;
+  let inCart = null;
 
   pool.query(
-    `INSERT INTO carts_products (cart_id, product_id, product_count, add_time) 
-    VALUES ($1, $2, $3, current_timestamp) 
-    RETURNING cart_id, product_id, product_count;`,
-    [cart_id, product_id, product_count],
+    `SELECT * FROM carts_products WHERE cart_id = $1 AND product_id = $2`,
+    [cart_id, product_id],
     (error, results) => {
       if (error) {
         next(error);
       } else {
-        res.status(201).send(results.rows);
+        if (results.rows[0]) {
+          pool.query(
+            `UPDATE carts_products
+            SET product_count = product_count + $3, add_time = current_timestamp
+            WHERE cart_id = $1 AND product_id = $2
+            RETURNING cart_id, product_id, product_count;`,
+            [cart_id, product_id, product_count],
+            (error, results) => {
+              if (error) {
+                next(error);
+              } else {
+                res.status(201).send(results.rows);
+              }
+            }
+          );
+        } else {
+          pool.query(
+            `INSERT INTO carts_products (cart_id, product_id, product_count, add_time)
+          VALUES ($1, $2, $3, current_timestamp)
+          RETURNING cart_id, product_id, product_count;`,
+            [cart_id, product_id, product_count],
+            (error, results) => {
+              if (error) {
+                next(error);
+              } else {
+                res.status(201).send(results.rows);
+              }
+            }
+          );
+        }
       }
     }
   );
@@ -47,10 +74,9 @@ const addProductToCart = (req, res, next) => {
 
 //Checkout a cart and create order
 const checkoutCart = (req, res, next) => {
-  const {cart_id, user_id} = req.query
+  const { cart_id, user_id } = req.query;
 
-  const query = 
-  `
+  const query = `
   WITH user_carts_products AS (
     DELETE FROM carts_products
       USING carts
@@ -73,12 +99,12 @@ const checkoutCart = (req, res, next) => {
 
   pool.query(query, (error, results) => {
     if (error) {
-      next(error)
+      next(error);
     } else {
       res.status(200).send(results.rows);
     }
-  })
-}
+  });
+};
 
 //PUT actions
 
@@ -99,37 +125,36 @@ const updateCart = (req, res, next) => {
 };
 
 const addOneToCart = (req, res, next) => {
-  const {cart_id, product_id} = req.query
+  const { cart_id, product_id } = req.query;
   pool.query(
     `UPDATE carts_products SET product_count = (product_count + 1) WHERE cart_id = $1 AND product_id = $2
     RETURNING cart_id, product_id, product_count`,
     [cart_id, product_id],
     (error, results) => {
       if (error) {
-        next(error)
+        next(error);
       } else {
-        res.send(results.rows)
+        res.send(results.rows);
       }
     }
-  )
-}
+  );
+};
 
 const subtractOneFromCart = (req, res, next) => {
-  const {cart_id, product_id} = req.query
+  const { cart_id, product_id } = req.query;
   pool.query(
     `UPDATE carts_products SET product_count = (product_count - 1) WHERE cart_id = $1 AND product_id = $2
     RETURNING cart_id, product_id, product_count`,
     [cart_id, product_id],
     (error, results) => {
       if (error) {
-        next(error)
+        next(error);
       } else {
-        res.send(results.rows)
+        res.send(results.rows);
       }
     }
-  )
-}
-
+  );
+};
 
 //DELETE actions
 
