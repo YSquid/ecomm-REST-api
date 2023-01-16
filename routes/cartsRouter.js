@@ -15,12 +15,7 @@ cartsRouter.get("/:id", db_carts.getCartById);
 cartsRouter.post("/", db_carts.addProductToCart);
 cartsRouter.post(
   "/checkout/:id",
-  db_orders.cartInfo,
-  db_orders.cartsProducts,
-  db_orders.createOrder,
-  db_orders.ordersProducts,
-  db_orders.clearCart,
-  db_orders.updateStock
+  db_orders.checkoutCart
 );
 
 //PUT cart
