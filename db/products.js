@@ -27,6 +27,32 @@ const getProductById = (req, res, next) => {
   );
 };
 
+//Check for stock of product is >0
+
+const checkStock = (req, res, next) => {
+  const { product_id, product_count } = req.query;
+
+  pool.query(
+    `SELECT stock, name FROM products WHERE id = $1`,
+    [product_id],
+    (error, results) => {
+      if (error) {
+        next(error);
+      } else {
+        if (results.rows.length === 0) {
+          res.send("No product with that ID found");
+        } else {
+          if (results.rows[0].stock >= product_count) {
+            next();
+          } else {
+            res.status(200).send("Not enough stock");
+          }
+        }
+      }
+    }
+  );
+};
+
 //POST actions
 
 const addProduct = (req, res, next) => {
@@ -65,19 +91,15 @@ const updateProduct = (req, res, next) => {
 //DELETE actions
 
 const deleteProduct = (req, res, next) => {
-  const {id} = req.params
-  pool.query(
-    "DELETE FROM products WHERE id = $1",
-    [id],
-    (error) => {
-      if (error) {
-        next(error)
-      } else {
-        res.status(200).send(`Product with id: ${id} deleted`)
-      }
+  const { id } = req.params;
+  pool.query("DELETE FROM products WHERE id = $1", [id], (error) => {
+    if (error) {
+      next(error);
+    } else {
+      res.status(200).send(`Product with id: ${id} deleted`);
     }
-  )
-}
+  });
+};
 
 //exports
 module.exports = {
@@ -85,5 +107,6 @@ module.exports = {
   getProductById,
   addProduct,
   updateProduct,
-  deleteProduct
+  checkStock,
+  deleteProduct,
 };

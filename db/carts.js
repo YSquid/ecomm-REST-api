@@ -28,7 +28,6 @@ const getCartById = (req, res, next) => {
 
 const addProductToCart = (req, res, next) => {
   const { cart_id, product_id, product_count } = req.query;
-  let inCart = null;
 
   pool.query(
     `SELECT * FROM carts_products WHERE cart_id = $1 AND product_id = $2`,
