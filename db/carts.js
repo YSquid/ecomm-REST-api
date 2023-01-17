@@ -124,7 +124,8 @@ const checkoutCart = (req, res, next) => {
     if (error) {
       next(error);
     } else {
-      res.status(200).send(results.rows);
+      res.locals.orders_products = results.rows
+      next();
     }
   });
 };

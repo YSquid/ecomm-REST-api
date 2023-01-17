@@ -27,7 +27,7 @@ const getProductById = (req, res, next) => {
   );
 };
 
-//Check for stock of product is >0
+//Check for stock of product is > 0
 
 const checkStock = (req, res, next) => {
   const { product_id, product_count } = req.query;
@@ -88,6 +88,24 @@ const updateProduct = (req, res, next) => {
   );
 };
 
+//Update stock - run after a cart checkout middlware
+
+const updateStock = (req, res, next) => {
+  res.locals.orders_products.forEach((product) => {
+    pool.query(
+      `UPDATE products
+      SET stock = (stock - $1) WHERE id = $2
+      RETURNING id, name, description, price, stock`,
+      [product.product_count, product.product_id],
+      (error, results) => {
+        if (error) {
+          next(error);
+        }
+      }
+    );
+  });
+  res.status(200).send(res.locals.orders_products);
+};
 //DELETE actions
 
 const deleteProduct = (req, res, next) => {
@@ -108,5 +126,6 @@ module.exports = {
   addProduct,
   updateProduct,
   checkStock,
+  updateStock,
   deleteProduct,
 };
