@@ -1,3 +1,4 @@
+const e = require("express");
 const pool = require("./index.js");
 
 //GET actions
@@ -71,9 +72,32 @@ const addProductToCart = (req, res, next) => {
   );
 };
 
+//Confirm stock of all products in cart before creating order
+const confirmStock = (req, res, next) => {
+  const { user_id } = req.params;
+  
+  const query = `SELECT product_id, product_count, stock
+ FROM carts_products
+ JOIN products
+ ON carts_products.product_id = products.id
+ WHERE carts_products.cart_id = ${user_id}`;
+
+ pool.query(query, (error, results) => {
+  if (error) {
+    next (error)
+  } else if (results.rows.every((product) => {return product.product_count <= product.stock})){
+    next();
+  } else {
+    const outOfStock = results.rows.filter((product) => {return product.product_count > product.stock})
+    const outOfStockIds = outOfStock.map((product) => {return product.product_id})
+    res.send(`Out of stock of the following product id: ${outOfStockIds}`)
+  }
+ })
+};
+
 //Checkout a cart and create order
 const checkoutCart = (req, res, next) => {
-  const { cart_id, user_id } = req.query;
+  const { user_id } = req.params;
 
   const query = `
   WITH user_carts_products AS (
@@ -175,6 +199,7 @@ module.exports = {
   updateCart,
   addOneToCart,
   subtractOneFromCart,
+  confirmStock,
   checkoutCart,
   deleteCart,
 };
