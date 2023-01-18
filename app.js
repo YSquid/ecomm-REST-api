@@ -2,12 +2,15 @@ const express = require("express");
 const app = express();
 require("dotenv").config();
 const PORT = process.env.EXPRESS_PORT || 3000;
+const passport = require("passport");
+require("./passportConfig")(passport);
 
 module.exports = app;
 
 //Middleware for parsing request bodies
 const bodyParser = require("body-parser");
 app.use(bodyParser.json());
+app.use(express.urlencoded({extended: true}))
 
 //Mount apiRouter (from routes/api) at '/api' path
 const apiRouter = require("./routes/api");
@@ -33,10 +36,12 @@ app.get("/register", (req, res) => {
   res.render("register.ejs");
 });
 
-app.post("/register", (req, res) => {
-  //placeholder
-  res.send('Register placeholder')
+app.post(
+"/register", 
+  passport.authenticate("local-signup", { session: false }), (req, res, next) => {
+  res.json({user: req.user})
 })
+
 //Default error handling
 app.use((err, req, res, next) => {
   console.error(err.stack);
@@ -47,6 +52,7 @@ app.use((err, req, res, next) => {
         err
     );
 });
+
 
 app.listen(PORT, () => {
   console.log(`App listening on port: ${PORT}`);
