@@ -26,9 +26,9 @@ app.get("/login", (req, res) => {
   res.render("login.ejs");
 });
 
-app.post("/login", (req, res) => {
+app.post("/login", passport.authenticate("local-login", { session: false }), (req, res) => {
   //placeholder
-  res.send('Login placeholder')
+  res.redirect('/api')
 })
 
 //Register route
