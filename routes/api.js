@@ -8,6 +8,9 @@ const cartsRouter = require('./cartsRouter')
 
 
 //Mount respective endpoint router at paths
+apiRouter.get('/', (req, res) => {
+    res.send('Welcome to the API')
+})
 apiRouter.use('/products/', productsRouter)
 apiRouter.use('/categories/', categoriesRouter)
 apiRouter.use('/users/', usersRouter)
