@@ -15,14 +15,37 @@ app.use("/api", apiRouter);
 
 //Homepage route
 app.get("/", (req, res) => {
-  res.send("Hello Express!");
+  res.render("home.ejs", { name: "Ahmad" });
 });
 
+//Login routes
+app.get("/login", (req, res) => {
+  res.render("login.ejs");
+});
+
+app.post("/login", (req, res) => {
+  //placeholder
+  res.send('Login placeholder')
+})
+
+//Register route
+app.get("/register", (req, res) => {
+  res.render("register.ejs");
+});
+
+app.post("/register", (req, res) => {
+  //placeholder
+  res.send('Register placeholder')
+})
+//Default error handling
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res
     .status(500)
-    .send("Bad request - check the url and path paramters you are sending. Error message:" + err);
+    .send(
+      "Bad request - check the url and path paramters you are sending. Error message:" +
+        err
+    );
 });
 
 app.listen(PORT, () => {
