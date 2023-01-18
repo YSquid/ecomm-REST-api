@@ -31,8 +31,18 @@ const matchPassword = async (password, hashPassword) => {
     return match
 };
 
+const checkAuthenticated = (req, res, next, error) => {
+    if (req.isAuthenticated()) {
+        console.log(req.body)
+        return next();
+    } else {
+        res.send('Unauthorized' + error)
+    }
+}
+
 module.exports = {
     emailExists,
     createUser,
-    matchPassword
+    matchPassword,
+    checkAuthenticated
 }

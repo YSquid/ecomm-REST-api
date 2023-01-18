@@ -3,18 +3,27 @@ const app = express();
 require("dotenv").config();
 const PORT = process.env.EXPRESS_PORT || 3000;
 const passport = require("passport");
+const session = require('express-session')
 require("./passportConfig")(passport);
+const db_auth = require('./db/auth.js')
 
 module.exports = app;
 
-//Middleware for parsing request bodies
+//Middleware stack
 const bodyParser = require("body-parser");
 app.use(bodyParser.json());
 app.use(express.urlencoded({extended: true}))
+app.use(session({
+  secret: 'FcEN9gUDmbwGKwBhlviX',
+  resave: false,
+  saveUninitialized: false
+}))
+app.use(passport.initialize())
+app.use(passport.session())
 
 //Mount apiRouter (from routes/api) at '/api' path
 const apiRouter = require("./routes/api");
-app.use("/api", apiRouter);
+app.use("/api", db_auth.checkAuthenticated, apiRouter);
 
 //Homepage route
 app.get("/", (req, res) => {
