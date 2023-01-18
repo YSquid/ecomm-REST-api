@@ -39,7 +39,7 @@ app.get("/register", (req, res) => {
 app.post(
 "/register", 
   passport.authenticate("local-signup", { session: false }), (req, res, next) => {
-  res.json({user: req.user})
+  res.redirect('/api')
 })
 
 //Default error handling
