@@ -3,27 +3,33 @@ const app = express();
 require("dotenv").config();
 const PORT = process.env.EXPRESS_PORT || 3000;
 const passport = require("passport");
-const session = require('express-session')
+const session = require("express-session");
+const bodyParser = require("body-parser");
 require("./passportConfig")(passport);
-const db_auth = require('./db/auth.js')
+const db_auth = require("./db/auth.js");
 
 module.exports = app;
 
 //Middleware stack
-const bodyParser = require("body-parser");
 app.use(bodyParser.json());
-app.use(express.urlencoded({extended: true}))
-app.use(session({
-  secret: 'FcEN9gUDmbwGKwBhlviX',
-  resave: false,
-  saveUninitialized: false
-}))
-app.use(passport.initialize())
-app.use(passport.session())
+app.use(express.urlencoded({ extended: false }));
+app.use(
+  session({
+    secret: "FcEN9gUDmbwGKwBhlviX",
+    resave: false,
+    saveUninitialized: false,
+  })
+);
+app.use(passport.initialize());
+app.use(passport.session());
+passport.serializeUser((user, done) => done(null, user.id));
+passport.deserializeUser((id, done) => {
+  return done(null, getUserById(id));
+});
 
 //Mount apiRouter (from routes/api) at '/api' path
 const apiRouter = require("./routes/api");
-app.use("/api", db_auth.checkAuthenticated, apiRouter);
+app.use("/api", checkAuthenticated, apiRouter);
 
 //Homepage route
 app.get("/", (req, res) => {
@@ -35,10 +41,13 @@ app.get("/login", (req, res) => {
   res.render("login.ejs");
 });
 
-app.post("/login", passport.authenticate("local-login", { session: false }), (req, res) => {
-  //placeholder
-  res.redirect('/api')
-})
+app.post(
+  "/login",
+  passport.authenticate("local-login", { session: true }),
+  (req, res) => {
+    res.redirect("/api");
+  }
+);
 
 //Register route
 app.get("/register", (req, res) => {
@@ -46,10 +55,12 @@ app.get("/register", (req, res) => {
 });
 
 app.post(
-"/register", 
-  passport.authenticate("local-signup", { session: false }), (req, res, next) => {
-  res.redirect('/api')
-})
+  "/register",
+  passport.authenticate("local-signup", { session: true }),
+  (req, res, next) => {
+    res.redirect("/api");
+  }
+);
 
 //Default error handling
 app.use((err, req, res, next) => {
@@ -62,6 +73,14 @@ app.use((err, req, res, next) => {
     );
 });
 
+function checkAuthenticated(req, res, next) {
+  if (req.isAuthenticated()) {
+    console.log("Is authenticated");
+    return next();
+  }
+
+  res.redirect("/login");
+}
 
 app.listen(PORT, () => {
   console.log(`App listening on port: ${PORT}`);
