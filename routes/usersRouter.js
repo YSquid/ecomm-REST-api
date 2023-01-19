@@ -18,4 +18,4 @@ usersRouter.post('/', db_users.addUser)
 usersRouter.put('/:id', db_users.updateUser)
 
 //DELETE user
-usersRouter.delete('/:id', db_users.deleteUser)
+usersRouter.delete('/:email', db_users.deleteUserByEmail)

@@ -62,7 +62,7 @@ const updateUser= (req, res, next) => {
 
 //DELETE actions
 
-const deleteUser = (req, res, next) => {
+const deleteUserById = (req, res, next) => {
   const { id } = req.params;
   pool.query("DELETE FROM users WHERE id = $1", [id], (error) => {
     if (error) {
@@ -73,10 +73,22 @@ const deleteUser = (req, res, next) => {
   });
 };
 
+const deleteUserByEmail = (req, res, next) => {
+  const {email} = req.params
+  pool.query("DELETE FROM users WEHRE email = $1", [email], (error) =>{
+    if (error){
+      next(error)
+    } else {
+      res.status(200).send(`User with the email: ${email} deleted`)
+    }
+  })
+}
+
 module.exports = {
   getUsers,
   getUserById,
   addUser,
   updateUser,
-  deleteUser
+  deleteUserById,
+  deleteUserByEmail
 };
