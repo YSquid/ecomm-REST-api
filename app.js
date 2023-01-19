@@ -5,8 +5,9 @@ const PORT = process.env.EXPRESS_PORT || 3000;
 const passport = require("passport");
 const session = require("express-session");
 const bodyParser = require("body-parser");
+const pool = require("./db/index");
 require("./passportConfig")(passport);
-const db_auth = require("./db/auth.js");
+
 
 module.exports = app;
 
@@ -22,8 +23,11 @@ app.use(
 );
 app.use(passport.initialize());
 app.use(passport.session());
-passport.serializeUser((user, done) => done(null, user.id));
+passport.serializeUser((user, done) => {
+  console.log(user)
+  return done(null, user.id)});
 passport.deserializeUser((id, done) => {
+  console.log(id)
   return done(null, getUserById(id));
 });
 
@@ -80,6 +84,15 @@ function checkAuthenticated(req, res, next) {
   }
 
   res.redirect("/login");
+}
+
+async function getUserById(id) {
+  const data =  pool.query(
+    "SELECT id, email FROM users WHERE id = $1",
+    [id]
+  )
+  if (data.rowCount == 0) return false;
+  return data.rows;
 }
 
 app.listen(PORT, () => {
