@@ -39,6 +39,7 @@ app.use("/api", db_auth.checkAuthenticated, apiRouter);
 
 //Homepage route
 app.get("/", (req, res) => {
+  console.log(res)
   res.render("home.ejs", { name: "Ahmad" });
 });
 
