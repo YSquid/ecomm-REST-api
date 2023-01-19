@@ -33,7 +33,6 @@ const matchPassword = async (password, hashPassword) => {
 
 const checkAuthenticated = (req, res, next)  => {
     if (req.isAuthenticated()) {
-      console.log("Is authenticated");
       return next();
     }
   

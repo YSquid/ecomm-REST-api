@@ -5,15 +5,12 @@ const PORT = process.env.EXPRESS_PORT || 3000;
 const passport = require("passport");
 const session = require("express-session");
 const bodyParser = require("body-parser");
-const pool = require("./db/index");
 require("./passportConfig")(passport);
 const db_auth = require('./db/auth')
 
 module.exports = app;
 
 //Middleware stack
-
-
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: false }));
 
@@ -30,11 +27,9 @@ app.use(passport.session());
 
 //serialize and deserialize user
 passport.serializeUser((user, done) => {
-  console.log(user);
   return done(null, user.id);
 });
 passport.deserializeUser((id, done) => {
-  console.log(id);
   return done(null, db_auth.getUserById(id));
 });
 
@@ -87,5 +82,4 @@ app.use((err, req, res, next) => {
 
 app.listen(PORT, () => {
   console.log(`App listening on port: ${PORT}`);
-  // console.log(process.env) -- confirming process.env object
 });
