@@ -7,33 +7,40 @@ const session = require("express-session");
 const bodyParser = require("body-parser");
 const pool = require("./db/index");
 require("./passportConfig")(passport);
-
+const db_auth = require('./db/auth')
 
 module.exports = app;
 
 //Middleware stack
+
+
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: false }));
+
+//Define session variables and intialize session
 app.use(
   session({
-    secret: "FcEN9gUDmbwGKwBhlviX",
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
   })
 );
 app.use(passport.initialize());
 app.use(passport.session());
+
+//serialize and deserialize user
 passport.serializeUser((user, done) => {
-  console.log(user)
-  return done(null, user.id)});
+  console.log(user);
+  return done(null, user.id);
+});
 passport.deserializeUser((id, done) => {
-  console.log(id)
-  return done(null, getUserById(id));
+  console.log(id);
+  return done(null, db_auth.getUserById(id));
 });
 
 //Mount apiRouter (from routes/api) at '/api' path
 const apiRouter = require("./routes/api");
-app.use("/api", checkAuthenticated, apiRouter);
+app.use("/api", db_auth.checkAuthenticated, apiRouter);
 
 //Homepage route
 app.get("/", (req, res) => {
@@ -77,23 +84,6 @@ app.use((err, req, res, next) => {
     );
 });
 
-function checkAuthenticated(req, res, next) {
-  if (req.isAuthenticated()) {
-    console.log("Is authenticated");
-    return next();
-  }
-
-  res.redirect("/login");
-}
-
-async function getUserById(id) {
-  const data =  pool.query(
-    "SELECT id, email FROM users WHERE id = $1",
-    [id]
-  )
-  if (data.rowCount == 0) return false;
-  return data.rows;
-}
 
 app.listen(PORT, () => {
   console.log(`App listening on port: ${PORT}`);

@@ -31,8 +31,25 @@ const matchPassword = async (password, hashPassword) => {
     return match
 };
 
+const checkAuthenticated = (req, res, next)  => {
+    if (req.isAuthenticated()) {
+      console.log("Is authenticated");
+      return next();
+    }
+  
+    res.redirect("/login");
+  }
+
+ const getUserById = async (id) => {
+    const data = pool.query("SELECT id, email FROM users WHERE id = $1", [id]);
+    if (data.rowCount == 0) return false;
+    return data.rows;
+  }
+
 module.exports = {
     emailExists,
     createUser,
     matchPassword,
+    checkAuthenticated,
+    getUserById
 }
