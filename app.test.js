@@ -1,7 +1,7 @@
 const request = require("supertest");
 const baseURL = "http://localhost:3000";
 
-//GET homepage route
+//Homepage testing
 
 describe("Homepage Tests /", () => {
   it("GET '/' should return 200 status", async () => {
@@ -10,11 +10,19 @@ describe("Homepage Tests /", () => {
   });
 });
 
+
+//Registration Testing
+
+// describe("Registration Tests", () => {
+//   it("Get '/reg'")
+// })
+
 //Login testing
 describe("Login Tests", () => {
   it("GET '/login' should return 200 status", async () => {
-    const resposne = await request(baseURL).get("/login");
-    expect(resposne.statusCode).toBe(200);
+    const response = await request(baseURL).get("/login");
+    expect(response.statusCode).toBe(200);
+    expect(response.text).toContain('<h1>Login</h1>')
   });
 
   it("POST '/login' should redirect to /api on successful login", async () => {
