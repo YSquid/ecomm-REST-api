@@ -64,7 +64,7 @@ app.post(
   "/register",
   passport.authenticate("local-signup", { session: true }),
   (req, res, next) => {
-    res.redirect("/api");
+    res.redirect("/login");
   }
 );
 
