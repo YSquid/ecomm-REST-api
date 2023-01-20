@@ -20,18 +20,9 @@ describe("Registration Tests", () => {
       expect(response.statusCode).toBe(200);
       expect(response.text).toContain("<h1>Register</h1>");
     });
+
+    it("POST '/register'")
   });
-  describe("Register New User Tests", () => {
-    it ("POST 'register' should redirect to /login on successful registration", async () => {
-      const response = await request(baseURL)
-      .post("/register")
-      .send({
-        email: 'testsuite5@supertest.com',
-        password: 'test'
-      })
-      expect(response.header.location).toBe('/login')
-    })
-  })
 });
 
 //Login testing

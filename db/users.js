@@ -21,7 +21,6 @@ const getUserById = (req, res, next) => {
   });
 };
 
-
 //POST actions
 
 const addUser = (req, res, next) => {
@@ -43,9 +42,10 @@ const addUser = (req, res, next) => {
 
 //PUT actions
 
-const updateUser= (req, res, next) => {
+const updateUser = (req, res, next) => {
   const { id } = req.params;
-  const { first_name, last_name, address, province_state, country, city } = req.body;
+  const { first_name, last_name, address, province_state, country, city } =
+    req.body;
   pool.query(
     `UPDATE users SET first_name = $2, last_name = $3, address = $4, province_state = $5, country = $6, city = $7 
     WHERE id = $1 RETURNING id, first_name, last_name, address, province_state, country, city`,
@@ -74,15 +74,15 @@ const deleteUserById = (req, res, next) => {
 };
 
 const deleteUserByEmail = (req, res, next) => {
-  const {email} = req.params
-  pool.query("DELETE FROM users WEHRE email = $1", [email], (error) =>{
-    if (error){
-      next(error)
+  const { email } = req.params;
+  pool.query("DELETE FROM users WHERE email = $1", [email], (error) => {
+    if (error) {
+      next(error);
     } else {
-      res.status(200).send(`User with the email: ${email} deleted`)
+      res.status(200).send(`User with the email: ${email} deleted`);
     }
-  })
-}
+  });
+};
 
 module.exports = {
   getUsers,
@@ -90,5 +90,5 @@ module.exports = {
   addUser,
   updateUser,
   deleteUserById,
-  deleteUserByEmail
+  deleteUserByEmail,
 };
