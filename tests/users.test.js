@@ -22,7 +22,6 @@ describe("/api/users tests", () =>{
     it("gets user by email", async() => {
         let response = await superagent.get('http://localhost:3000/api/users/a@a')
         expect(response.status).toBe(200)
-        console.log(response)
         expect(response.body[0].email).toBe('a@a')
     })
 

@@ -69,7 +69,6 @@ describe("Registration tests", () => {
   it("registers user registertest@jest.com", async () => {
     let response = await request(baseURL).post('/register').send({email: 'registertest@jest.com', password: 'test'})
     expect(response.status).toBe(302)
-    console.log(response.text)
   });
 
   it("can login with registertest@jest.com", async () => {
