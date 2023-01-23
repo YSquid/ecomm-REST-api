@@ -3,7 +3,9 @@ const baseURL = "http://localhost:3000";
 const superagent = require("superagent").agent();
 
 describe("products tests", () => {
+    
   let productId;
+
   beforeAll(async () => {
     await superagent
       .post("http://localhost:3000/login")

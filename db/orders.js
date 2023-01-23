@@ -27,7 +27,7 @@ const getOrderById = (req, res, next) => {
 const addOrder = (req, res, next) => {
   const { user_id } = req.body;
   pool.query(
-    `INSERT INTO orders (user_id) VALUES ($1) RETURNING id, user_id;`,
+    `INSERT INTO orders (user_id, add_time) VALUES ($1, current_timestamp) RETURNING id, user_id, add_time;`,
     [user_id],
     (error, results) => {
       if (error) {
