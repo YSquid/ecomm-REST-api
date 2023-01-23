@@ -66,9 +66,21 @@ describe("Registration tests", () => {
     expect(apiGet.status).toBe(200);
     expect(apiGet.text).toBe("Welcome to the API");
   });
+
+  it("registers user registertest@jest.com", async () => {
+    let response = await request(baseURL).post('/register').send({email: 'registertest@jest.com', password: 'test'})
+    expect(response.status).toBe(302)
+    console.log(response.text)
+  });
+
+  it("can login with registertest@jest.com", async () => {
+    let response = await request(baseURL).post('/login').send({email: 'registertest@jest.com', password: 'test'})
+    expect(response.status).toBe(302)
+    expect(response.text).toBe("Found. Redirecting to /api")
+  })
   it("deletes registertest user", async () => {
     let response = await superagent.delete("http://localhost:3000/api/users/registertest@jest.com")
     expect(response.status).toBe(200)
-    console.log(response.text)
+    expect(response.text).toBe("User with the email: registertest@jest.com deleted")
   });
 });
