@@ -10,9 +10,9 @@ const getUsers = (req, res, next) => {
   });
 };
 
-const getUserById = (req, res, next) => {
-  const { id } = req.params;
-  pool.query("SELECT * FROM users WHERE id = $1", [id], (error, results) => {
+const getUserByEmail = (req, res, next) => {
+  const { email } = req.params;
+  pool.query("SELECT * FROM users WHERE email = $1", [email], (error, results) => {
     if (error) {
       next(error);
     } else {
@@ -43,13 +43,13 @@ const addUser = (req, res, next) => {
 //PUT actions
 
 const updateUser = (req, res, next) => {
-  const { id } = req.params;
+  const { email } = req.params;
   const { first_name, last_name, address, province_state, country, city } =
     req.body;
   pool.query(
     `UPDATE users SET first_name = $2, last_name = $3, address = $4, province_state = $5, country = $6, city = $7 
-    WHERE id = $1 RETURNING id, first_name, last_name, address, province_state, country, city`,
-    [id, first_name, last_name, address, province_state, country, city],
+    WHERE email = $1 RETURNING id, first_name, last_name, address, province_state, country, city`,
+    [email, first_name, last_name, address, province_state, country, city],
     (error, results) => {
       if (error) {
         next(error);
@@ -86,7 +86,7 @@ const deleteUserByEmail = (req, res, next) => {
 
 module.exports = {
   getUsers,
-  getUserById,
+  getUserByEmail,
   addUser,
   updateUser,
   deleteUserById,

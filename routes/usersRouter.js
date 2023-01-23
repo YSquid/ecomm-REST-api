@@ -7,15 +7,17 @@ module.exports = usersRouter;
 //GET all users - psql database
 usersRouter.get('/', db_users.getUsers)
 
-//GET user by id - psql database
-usersRouter.get('/:id', db_users.getUserById)
+//GET user by emil - psql database
+usersRouter.get('/:email', db_users.getUserByEmail)
 
 //POST user
-usersRouter.post('/', db_users.addUser)
+//Deprecated - adding users is handled with register route
+// usersRouter.post('/', db_users.addUser)
 
 
 //PUT user
-usersRouter.put('/:id', db_users.updateUser)
+usersRouter.put('/:email', db_users.updateUser)
 
 //DELETE user
+//Testing - this is tested in app.test.js via the 'deletes registertest user' test
 usersRouter.delete('/:email', db_users.deleteUserByEmail)
