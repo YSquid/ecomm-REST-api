@@ -1,7 +1,7 @@
 const request = require("supertest");
 const baseURL = "http://localhost:3000";
-var server = request.agent('http://localhost:3000');
-const superagent = require('superagent').agent()
+var server = request.agent("http://localhost:3000");
+const superagent = require("superagent").agent();
 
 //Homepage testing
 
@@ -55,20 +55,20 @@ const superagent = require('superagent').agent()
 // });
 
 //Registration testing
-describe('Registration tests', () => {
-  it('login with superagent', async () =>{
-
-    let loggedIn = await superagent
-    .post('http://localhost:3000/login')
-    .send({email: 'a@a', password: '123'})
-    console.log(loggedIn.text)
-
-    let apiGet = await superagent.get('http://localhost:3000/api')
-    console.log(apiGet.text)
-    expect(apiGet.status).toBe(200)
-    expect(apiGet.text).toBe('Welcome to the API')
-
-  })
-})
-
-
+describe("Registration tests", () => {
+  beforeAll(async () => {
+    await superagent
+      .post("http://localhost:3000/login")
+      .send({ email: "a@a", password: "123" });
+  });
+  it("logged in with superagent test", async () => {
+    let apiGet = await superagent.get("http://localhost:3000/api");
+    expect(apiGet.status).toBe(200);
+    expect(apiGet.text).toBe("Welcome to the API");
+  });
+  it("deletes registertest user", async () => {
+    let response = await superagent.delete("http://localhost:3000/api/users/registertest@jest.com")
+    expect(response.status).toBe(200)
+    console.log(response.text)
+  });
+});
