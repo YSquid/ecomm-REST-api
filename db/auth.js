@@ -1,5 +1,4 @@
 const bcrypt = require('bcrypt')
-
 const pool = require("./index.js");
 
 const emailExists = async(email) => {
