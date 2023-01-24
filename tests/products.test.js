@@ -1,6 +1,7 @@
 const request = require("supertest");
 const baseURL = "http://localhost:3000";
 const superagent = require("superagent").agent();
+const app = require('../app')
 
 describe("products tests", () => {
     
