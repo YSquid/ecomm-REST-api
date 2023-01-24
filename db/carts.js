@@ -25,6 +25,8 @@ const getCartById = (req, res, next) => {
 
 //POST actions
 
+//Create a cart (for testing, usually done autmatically on user creation)
+
 //Add item to a cart using query params
 
 const addProductToCart = (req, res, next) => {

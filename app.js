@@ -65,7 +65,8 @@ app.post(
   "/register",
   passport.authenticate("local-signup", { session: true }),
   (req, res, next) => {
-    res.redirect("/login");
+    let userEmail = req.body.email;
+    res.redirect("/login/?email=" + userEmail);
   }
 );
 
