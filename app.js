@@ -56,6 +56,14 @@ app.post(
   }
 );
 
+//Logout route
+app.post("/logout", (req, res) => {
+  req.logout((error) => {
+    if (error) {return next(error)}
+  })
+  res.redirect("/login")
+} )
+
 //Register route
 app.get("/register", (req, res) => {
   res.render("register.ejs");
