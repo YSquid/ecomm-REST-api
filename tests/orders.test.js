@@ -23,9 +23,27 @@ describe("orders tests", () => {
     expect(response.body[0].id).toBe(1)
   });
 
-  it("adds an order", async() => {
+  it("adds a test order", async() => {
     let response = await superagent.post("http://localhost:3000/api/orders").send({user_id : 3, add_time: 'Jan 23'})
     expect(response.status).toBe(201)
     expect(response.body[0].user_id).toBe(3)
+    orderId = response.body[0].id
+    console.log(response.body[0].id)
+  });
+
+  it("updates and order", async () => {
+    let response = await superagent.put(`http://localhost:3000/api/orders/${orderId}`)
+    .send({
+      "user_id" : 2
+    })
+
+    expect(response.status).toBe(200);
+    expect(response.body[0].user_id).toBe(2)
+  });
+
+  it("deletes the test order", async () => {
+    let response = await superagent.delete(`http://localhost:3000/api/orders/${orderId}`)
+    expect(response.status).toBe(200);
+    expect(response.text).toBe(`Order with id: ${orderId} deleted`)
   })
 });
