@@ -24,7 +24,44 @@ describe("carts tests", () => {
   });
   //add a test user, and therefore test cart for the purposes of these cart tests
   it("creates a test user", async () => {
-    let response = await request(baseURL).post('/register').send({email: 'registertest@jest.com', password: 'test'})
+    let response = await request(baseURL).post('/register').send({email: 'cartstest@jest.com', password: 'test'})
     expect(response.status).toBe(302)
   });
+
+  it("finds test users id, set cart_id equal to it", async () => {
+    let response = await superagent.get("http://localhost:3000/api/users/cartstest@jest.com")
+    expect(response.status).toBe(200);
+    expect(response.body[0].id).not.toBe(null);
+    cartId = response.body[0].id
+  });
+
+  it("adds a product to test users cart", async () => {
+    let response = await superagent.post(`http://localhost:3000/api/carts/?cart_id=${cartId}&product_id=1&product_count=3`);
+    expect(response.status).toBe(201);
+    expect(response.body[0].cart_id).toBe(cartId);
+    expect(response.body[0].product_id).toBe(1);
+    expect(response.body[0].product_count).toBe(3);
+  });
+
+  it("adds one of a product to the cart", async () => {
+    let response = await superagent.put(`http://localhost:3000/api/carts/plusone/?cart_id=${cartId}&product_id=1`)
+    expect(response.status).toBe(200);
+    expect(response.body[0].product_count).toBe(4);
+  });
+
+  it("subtracts one of a product from the cart", async () => {
+    let response = await superagent.put(`http://localhost:3000/api/carts/minusone/?cart_id=${cartId}&product_id=1`);
+    expect(response.status).toBe(200);
+    expect(response.body[0].product_count).toBe(3);
+  })
+
+  it("checks out users cart and creates order", async () => {
+    let response = await superagent.post(`http://localhost:3000/api/carts/checkout/${cartId}`)
+    expect(response.status).toBe(200);
+    expect(response.body.length > 0).toBe(true);
+    expect(response.body[0].product_id).toBe(1);
+    expect(response.body[0].product_count).toBe(3);
+  });
+
+  
 })
