@@ -1,7 +1,6 @@
 const request = require("supertest");
 const baseURL = "http://localhost:3000";
 const superagent = require("superagent").agent();
-const app = require("../app");
 const pool = require("../db/index");
 
 describe("carts tests", () => {
@@ -77,7 +76,6 @@ describe("carts tests", () => {
     expect(response.body[0].product_id).toBe(1);
     expect(response.body[0].product_count).toBe(3);
     orderId = response.body[0].order_id;
-    console.log(orderId)
   });
 
   it("deletes the test user and associated rows (orders_products, orders, carts_products)", async () => {

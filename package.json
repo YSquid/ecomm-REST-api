@@ -4,7 +4,7 @@
   "description": "A REST api for e-commerce store",
   "main": "app.js",
   "scripts": {
-    "test": "jest --forceExit"
+    "test": "jest"
   },
   "repository": {
     "type": "git",
