@@ -8,11 +8,7 @@ describe("/api/users tests", () =>{
         .post("http://localhost:3000/login")
         .send({ email: "a@a", password: "123" });
     });
-    it("logged in with superagent test", async () => {
-        let apiGet = await superagent.get("http://localhost:3000/api");
-        expect(apiGet.status).toBe(200);
-        expect(apiGet.text).toBe("Welcome to the API");
-    });
+    
     it("gets users", async () => {
         let response = await superagent.get('http://localhost:3000/api/users')
         expect(response.status).toBe(200)

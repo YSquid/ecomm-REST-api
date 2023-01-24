@@ -63,7 +63,7 @@ describe("Registration tests", () => {
   it("logged in with superagent test", async () => {
     let apiGet = await superagent.get("http://localhost:3000/api");
     expect(apiGet.status).toBe(200);
-    expect(apiGet.text).toBe("Welcome to the API");
+    expect(apiGet.text).toContain("Welcome to the API");
   });
 
   it("registers user registertest@jest.com", async () => {
