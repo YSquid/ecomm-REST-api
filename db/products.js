@@ -1,52 +1,82 @@
-const supabase = require('./index');
+const supabase = require("./index");
 
 //GET actions
 
 const getProducts = async (req, res) => {
-  const {data} = await supabase.from('products').select();
-  console.log(data);
-  res.send(data)
+  try {
+    const { data } = await supabase.from("products").select();
+    res.status(200).send(data);
+  } catch (error) {
+    res.send(error);
+  }
 };
 
-const getProductById = (req, res, next) => {
+const getProductById = async (req, res, next) => {
   const { id } = req.params;
-  pool.query(
-    "SELECT * FROM products WHERE id = $1;",
-    [id],
-    (error, results) => {
-      if (error) {
-        next(error);
-      } else {
-        res.status(200).send(results.rows);
-      }
+  try {
+    const { data, error } = await supabase
+      .from("products")
+      .select()
+      .eq("id", id);
+    //catch errors such as type errors
+    if (error) {
+      res.status(404);
+      next(error.message);
+      //case where query is allowed, but no rows returned
+    } else if (data.length < 1) {
+      res.status(404);
+      next(`No proudct with id:${id} found`);
+    } else {
+      res.status(200).send(data);
     }
-  );
+  } catch (error) {
+    next(error);
+  }
 };
 
 //Check for stock of product is > 0
 
-const checkStock = (req, res, next) => {
+const checkStock = async (req, res, next) => {
   const { product_id, product_count } = req.query;
 
-  pool.query(
-    `SELECT stock, name FROM products WHERE id = $1`,
-    [product_id],
-    (error, results) => {
-      if (error) {
-        next(error);
-      } else {
-        if (results.rows.length === 0) {
-          res.send("No product with that ID found");
-        } else {
-          if (results.rows[0].stock >= product_count) {
-            next();
-          } else {
-            res.status(200).send("Not enough stock");
-          }
-        }
-      }
+  const { data, error } = await supabase
+    .from("products")
+    .select(`name, stock`)
+    .eq("id", product_id);
+  console.log(data);
+
+  if (error) {
+    res.status(404);
+    next(error.message);
+  } else {
+    if (data.length === 0) {
+      res.send("No product with that id found");
+    } else if (data[0].stock >= product_count) {
+      res.send("enough stock, would be next in live");
+    } else {
+      res.status(200).send("Not enough stock");
     }
-  );
+  }
+
+  // pool.query(
+  //   `SELECT stock, name FROM products WHERE id = $1`,
+  //   [product_id],
+  //   (error, results) => {
+  //     if (error) {
+  //       next(error);
+  //     } else {
+  //       if (results.rows.length === 0) {
+  //         res.send("No product with that ID found");
+  //       } else {
+  //         if (results.rows[0].stock >= product_count) {
+  //           next();
+  //         } else {
+  //           res.status(200).send("Not enough stock");
+  //         }
+  //       }
+  //     }
+  //   }
+  // );
 };
 
 //POST actions
