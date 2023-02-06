@@ -35,7 +35,7 @@ passport.deserializeUser((id, done) => {
 
 //Mount apiRouter (from routes/api) at '/api' path
 const apiRouter = require("./routes/api");
-app.use("/api", db_auth.checkAuthenticated, apiRouter);
+app.use("/api", apiRouter);
 
 //Homepage route
 app.get("/", (req, res) => {

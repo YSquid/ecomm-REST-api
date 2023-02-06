@@ -1,15 +1,11 @@
-const pool = require("./index.js");
+const supabase = require('./index');
 
 //GET actions
 
-const getProducts = (req, res, next) => {
-  pool.query("SELECT * FROM products ORDER BY id ASC;", (error, results) => {
-    if (error) {
-      next(error);
-    } else {
-      res.status(200).send(results.rows);
-    }
-  });
+const getProducts = async (req, res) => {
+  const {data} = await supabase.from('products').select();
+  console.log(data);
+  res.send(data)
 };
 
 const getProductById = (req, res, next) => {
