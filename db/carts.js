@@ -139,66 +139,75 @@ const checkoutCart = async (req, res, next) => {
     .select();
   //extract the orderId
   const orderId = orderData.data[0].id;
-  
+
   //loop through and create entry in orders_products for each product data from carts_products
   for (let i = 0; i < productCount; i++) {
     let product_id = data[i].product_id;
     let product_count = data[i].product_count;
 
-    await supabase
-      .from("orders_products")
-      .insert({
-        order_id: orderId,
-        product_id: product_id,
-        product_count: product_count,
-      })
-      
-   
+    await supabase.from("orders_products").insert({
+      order_id: orderId,
+      product_id: product_id,
+      product_count: product_count,
+    });
   }
 
   //delete from carts_products
-  await supabase.from("carts_products").delete().eq('cart_id', user_id);
+  await supabase.from("carts_products").delete().eq("cart_id", user_id);
 
-
-  let finalData = await supabase.from("orders_products").select().eq('order_id', orderId)
+  let finalData = await supabase
+    .from("orders_products")
+    .select()
+    .eq("order_id", orderId);
   res.locals.orders_products = finalData.data;
   next();
 };
 
-
-
-const addOneToCart = (req, res, next) => {
+const addOneToCart = async (req, res, next) => {
   const { cart_id, product_id } = req.query;
-  pool.query(
-    `UPDATE carts_products SET product_count = (product_count + 1) WHERE cart_id = $1 AND product_id = $2
-    RETURNING cart_id, product_id, product_count`,
-    [cart_id, product_id],
-    (error, results) => {
-      if (error) {
-        next(error);
-      } else {
-        res.send(results.rows);
-      }
-    }
-  );
+  //return current count in cart
+  const { data, error } = await supabase
+    .from("carts_products")
+    .select("product_count")
+    .eq("cart_id", cart_id);
+  if (error) {
+    res.status(404);
+    next(error.message);
+  } else {
+    //extract current count, set newCount plus one, update, and return new data
+    const count = data[0].product_count;
+    const newCount = count + 1;
+    const newData = await supabase
+      .from("carts_products")
+      .update({ product_count: newCount })
+      .eq("product_id", product_id)
+      .select();
+    res.status(200).send(newData.data);
+  }
 };
 
-const subtractOneFromCart = (req, res, next) => {
+const subtractOneFromCart = async (req, res, next) => {
   const { cart_id, product_id } = req.query;
-  pool.query(
-    `UPDATE carts_products SET product_count = (product_count - 1) WHERE cart_id = $1 AND product_id = $2
-    RETURNING cart_id, product_id, product_count`,
-    [cart_id, product_id],
-    (error, results) => {
-      if (error) {
-        next(error);
-      } else {
-        res.send(results.rows);
-      }
-    }
-  );
+  //return current count in cart
+  const { data, error } = await supabase
+    .from("carts_products")
+    .select("product_count")
+    .eq("cart_id", cart_id);
+  if (error) {
+    res.status(404);
+    next(error.message);
+  } else {
+    //extract current count, set newCount minus one, update, and return new data
+    const count = data[0].product_count;
+    const newCount = count - 1;
+    const newData = await supabase
+      .from("carts_products")
+      .update({ product_count: newCount })
+      .eq("product_id", product_id)
+      .select();
+    res.status(200).send(newData.data);
+  }
 };
-
 
 module.exports = {
   getCarts,
@@ -208,10 +217,7 @@ module.exports = {
   subtractOneFromCart,
   confirmStock,
   checkoutCart,
-
 };
-
-
 
 //PUT actions
 //DEPRECATED - UNLIKELY TO EVER BE NEEDED
@@ -230,7 +236,6 @@ module.exports = {
 //     }
 //   );
 // };
-
 
 //DELETE actions
 //DEPRECATED - DELETIONS SHOULD HAPPEN AT USER, NEVER JUST ON CART
