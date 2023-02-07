@@ -51,7 +51,7 @@ const checkStock = async (req, res, next) => {
     if (data.length === 0) {
       res.send("No product with that id found");
     } else if (data[0].stock >= product_count) {
-      res.send("enough stock, would be next in live");
+      next();
     } else {
       res.status(200).send("Not enough stock");
     }
@@ -102,20 +102,16 @@ const updateProduct = async (req, res, next) => {
 //Update stock - run after a cart checkout middlware
 
 const updateStock = (req, res, next) => {
-  res.locals.orders_products.forEach((product) => {
-    pool.query(
-      `UPDATE products
-      SET stock = (stock - $1) WHERE id = $2
-      RETURNING id, name, description, price, stock`,
-      [product.product_count, product.product_id],
-      (error, results) => {
-        if (error) {
-          next(error);
-        }
-      }
-    );
+  console.log(`This is res locals ${res.locals.orders_products}`);
+  res.locals.orders_products.forEach(async (product) => {
+    //lookup product stock
+    const {data} = await supabase.from("products").select("stock").eq('id', product.product_id)
+    let currentStock = Number(data[0].stock);
+    let updatedStock = currentStock - product.product_count
+    await supabase.from("products").update({stock: updatedStock}).eq("id", product.product_id)
+    
   });
-  res.status(200).send(res.locals.orders_products);
+  res.status(200).send("updated");
 };
 //DELETE actions
 
