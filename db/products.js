@@ -43,7 +43,6 @@ const checkStock = async (req, res, next) => {
     .from("products")
     .select(`name, stock`)
     .eq("id", product_id);
-  console.log(data);
 
   if (error) {
     res.status(404);
@@ -57,61 +56,47 @@ const checkStock = async (req, res, next) => {
       res.status(200).send("Not enough stock");
     }
   }
-
-  // pool.query(
-  //   `SELECT stock, name FROM products WHERE id = $1`,
-  //   [product_id],
-  //   (error, results) => {
-  //     if (error) {
-  //       next(error);
-  //     } else {
-  //       if (results.rows.length === 0) {
-  //         res.send("No product with that ID found");
-  //       } else {
-  //         if (results.rows[0].stock >= product_count) {
-  //           next();
-  //         } else {
-  //           res.status(200).send("Not enough stock");
-  //         }
-  //       }
-  //     }
-  //   }
-  // );
 };
 
 //POST actions
 
-const addProduct = (req, res, next) => {
+const addProduct = async (req, res, next) => {
   const { name, description, price, stock } = req.body;
-  pool.query(
-    "INSERT INTO products (name, description, price, stock) VALUES ($1, $2, $3, $4) RETURNING id, name, description, price, stock;",
-    [name, description, price, stock],
-    (error, results) => {
-      if (error) {
-        next(error);
-      } else {
-        res.status(201).send(results.rows);
-      }
-    }
-  );
+  const { data, error } = await supabase.from("products").insert({
+    name: name,
+    description: description,
+    price: price,
+    stock: stock,
+  }).select();
+
+  if (error) {
+    res.status(404);
+    next(error.message);
+  } else {
+    res.status(201).send(data);
+  }
 };
 
 //PUT actions
 
-const updateProduct = (req, res, next) => {
+const updateProduct = async (req, res, next) => {
   const { id } = req.params;
   const { name, description, price, stock } = req.body;
-  pool.query(
-    "UPDATE products SET name = $2, description = $3, price = $4, stock = $5 WHERE id = $1 RETURNING id, name, description, price, stock",
-    [id, name, description, price, stock],
-    (error, results) => {
-      if (error) {
-        next(error);
-      } else {
-        res.status(200).send(results.rows);
-      }
-    }
-  );
+
+  const {data, error} = await supabase
+  .from("products")
+  .update({name: name, description: description, price: price, stock: stock})
+  .eq('id', id)
+  .select();
+
+  if (error) {
+    res.status(404);
+    next(error.message);
+  } else {
+    res.status(200).send(data);
+  }
+
+  
 };
 
 //Update stock - run after a cart checkout middlware
@@ -134,15 +119,15 @@ const updateStock = (req, res, next) => {
 };
 //DELETE actions
 
-const deleteProduct = (req, res, next) => {
+const deleteProduct = async (req, res, next) => {
   const { id } = req.params;
-  pool.query("DELETE FROM products WHERE id = $1", [id], (error) => {
-    if (error) {
-      next(error);
-    } else {
-      res.status(200).send(`Product with id: ${id} deleted`);
-    }
-  });
+  const {data, error} = await supabase.from("products").delete().eq('id', id);
+  if (error) {
+    res.status(404);
+    next(error.message);
+  } else {
+    res.status(200).send(`Product with id: ${id} deleted`);
+  }
 };
 
 //exports
