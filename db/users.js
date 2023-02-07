@@ -1,87 +1,91 @@
-const pool = require("./index.js");
+const supabase = require("./index");
 
-const getUsers = (req, res, next) => {
-  pool.query("SELECT * FROM users ORDER BY id ASC", (error, results) => {
-    if (error) {
-      next(error);
-    } else {
-      res.status(200).json(results.rows);
-    }
-  });
+const getUsers = async (req, res, next) => {
+  const { data, error } = await supabase
+    .from("users")
+    .select()
+    .order("id", { ascending: true });
+  if (error) {
+    res.status(404);
+    next(error.message);
+  } else {
+    res.status(200).send(data);
+  }
 };
 
-const getUserByEmail = (req, res, next) => {
+const getUserByEmail = async (req, res, next) => {
   const { email } = req.params;
-  pool.query("SELECT * FROM users WHERE email = $1", [email], (error, results) => {
-    if (error) {
-      next(error);
-    } else {
-      res.status(200).json(results.rows);
-    }
-  });
+  const { data, error } = await supabase
+    .from("users")
+    .select()
+    .eq("email", email);
+  if (error) {
+    res.status(404);
+    next(error.message);
+  } else {
+    res.status(200).send(data);
+  }
 };
 
 //POST actions
 
-const addUser = (req, res, next) => {
-  const { first_name, last_name, address, province_state, country, city } =
-    req.body;
-  pool.query(
-    `INSERT INTO users (first_name, last_name, address, province_state, country, city) 
-     VALUES ($1, $2, $3, $4, $5, $6) RETURNING id, first_name, last_name, address, province_state, country, city;`,
-    [first_name, last_name, address, province_state, country, city],
-    (error, results) => {
-      if (error) {
-        next(error);
-      } else {
-        res.status(201).send(results.rows);
-      }
-    }
-  );
+const addUser = async (req, res, next) => {
+  const { email, password, superuser } = req.body;
+  const { data, error } = await supabase
+    .from("users")
+    .insert({ emai: email, password: password, superuser: false })
+    .select();
+
+  if (error) {
+    res.status(404);
+    next(error.message);
+  } else {
+    res.status(201).send(data);
+  }
 };
 
 //PUT actions
 
-const updateUser = (req, res, next) => {
+const updateUser = async (req, res, next) => {
   const { email } = req.params;
-  const { first_name, last_name, address, province_state, country, city } =
-    req.body;
-  pool.query(
-    `UPDATE users SET first_name = $2, last_name = $3, address = $4, province_state = $5, country = $6, city = $7 
-    WHERE email = $1 RETURNING id, first_name, last_name, address, province_state, country, city`,
-    [email, first_name, last_name, address, province_state, country, city],
-    (error, results) => {
-      if (error) {
-        next(error);
-      } else {
-        res.status(200).send(results.rows);
-      }
+  const { password, superuser } = req.body;
+  const { data, error } = await supabase
+    .from("users")
+    .update({ password: password, superuser: superuser })
+    .eq("email", email)
+    .select();
+
+    if (error) {
+      res.status(404);
+      next(error.message);
+    } else {
+      res.status(200).send(data);
     }
-  );
 };
 
 //DELETE actions
+//DEPRECATED - using email as identity for actions
+// const deleteUserById = (req, res, next) => {
+//   const { id } = req.params;
+//   pool.query("DELETE FROM users WHERE id = $1", [id], (error) => {
+//     if (error) {
+//       next(error);
+//     } else {
+//       res.status(200).send(`User with id: ${id} deleted`);
+//     }
+//   });
+// };
 
-const deleteUserById = (req, res, next) => {
-  const { id } = req.params;
-  pool.query("DELETE FROM users WHERE id = $1", [id], (error) => {
-    if (error) {
-      next(error);
-    } else {
-      res.status(200).send(`User with id: ${id} deleted`);
-    }
-  });
-};
-
-const deleteUserByEmail = (req, res, next) => {
+const deleteUserByEmail = async (req, res, next) => {
   const { email } = req.params;
-  pool.query("DELETE FROM users WHERE email = $1", [email], (error) => {
-    if (error) {
-      next(error);
-    } else {
-      res.status(200).send(`User with the email: ${email} deleted`);
-    }
-  });
+  const {data, error} = await supabase.from("users").delete().eq('email', email);
+
+  if (error) {
+    res.status(404);
+    next(error.message);
+  } else {
+    res.status(200).send(`User with the email: ${email} deleted`);
+  }
 };
 
 module.exports = {
@@ -89,6 +93,5 @@ module.exports = {
   getUserByEmail,
   addUser,
   updateUser,
-  deleteUserById,
   deleteUserByEmail,
 };
