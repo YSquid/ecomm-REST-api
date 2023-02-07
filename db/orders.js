@@ -1,74 +1,81 @@
-const pool = require("./index.js");
+const supabase = require("./index");
 
 //GET actions
-const getOrders = (req, res, next) => {
-  pool.query("SELECT * FROM orders ORDER BY id ASC", (error, results) => {
-    if (error) {
-      next(error);
-    } else {
-      res.status(200).json(results.rows);
-    }
-  });
+const getOrders = async (req, res, next) => {
+  const { data, error } = await supabase.from("orders").select();
+  console.log(data);
+  if (error) {
+    res.status(404);
+    next(error.message);
+  } else {
+    res.status(200).send(data);
+  }
 };
 
-const getOrderById = (req, res, next) => {
+const getOrderById = async (req, res, next) => {
   const { id } = req.params;
-  pool.query("SELECT * FROM orders WHERE id = $1", [id], (error, results) => {
-    if (error) {
-      next(error);
-    } else {
-      res.status(200).send(results.rows);
-    }
-  });
+  const { data, error } = await supabase.from("orders").select().eq("id", id);
+
+  if (error) {
+    res.status(404);
+    next(error.message);
+  } else {
+    res.status(200).send(data);
+  }
 };
 
 //POST actions
 
-const addOrder = (req, res, next) => {
+const addOrder = async (req, res, next) => {
   const { user_id } = req.body;
-  pool.query(
-    `INSERT INTO orders (user_id, add_time) VALUES ($1, current_timestamp) RETURNING id, user_id, add_time;`,
-    [user_id],
-    (error, results) => {
-      if (error) {
-        next(error);
-      } else {
-        res.status(201).send(results.rows);
-      }
-    }
-  );
-};
+  const { data, error } = await supabase
+    .from("orders")
+    .insert({ user_id: user_id })
+    .select();
 
+  if (error) {
+    res.status(404);
+    next(error.message);
+  } else {
+    res.status(201).send(data);
+  }
+};
 
 //PUT actions
 
-const updateOrder = (req, res, next) => {
+const updateOrder = async (req, res, next) => {
   const { id } = req.params;
   const { user_id } = req.body;
-  pool.query(
-    "UPDATE orders SET user_id = $2 WHERE id = $1 RETURNING id, user_id;",
-    [id, user_id],
-    (error, results) => {
-      if (error) {
-        next(error);
-      } else {
-        res.status(200).send(results.rows);
-      }
-    }
-  );
+
+  const { data, error } = await supabase
+    .from("orders")
+    .update({ user_id: user_id })
+    .eq("id", id)
+    .select();
+
+  if (error) {
+    res.status(404);
+    next(error.message);
+  } else {
+    res.status(200).send(data);
+  }
+
+ 
 };
 
 //DELETE actions
 
-const deleteOrder = (req, res, next) => {
+const deleteOrder = async (req, res, next) => {
   const { id } = req.params;
-  pool.query("DELETE FROM orders WHERE id = $1", [id], (error) => {
-    if (error) {
-      next(error);
-    } else {
-      res.status(200).send(`Order with id: ${id} deleted`);
-    }
-  });
+
+  const {data, error} = await supabase.from("orders").delete().eq('id', id);
+
+  if (error) {
+    res.status(404);
+    next(error.message);
+  } else {
+    res.status(200).send(`Order with id: ${id} deleted`);
+  }
 };
 
 module.exports = {
