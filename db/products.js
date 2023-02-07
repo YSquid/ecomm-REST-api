@@ -102,7 +102,7 @@ const updateProduct = async (req, res, next) => {
 //Update stock - run after a cart checkout middlware
 
 const updateStock = (req, res, next) => {
-  console.log(`This is res locals ${res.locals.orders_products}`);
+  
   res.locals.orders_products.forEach(async (product) => {
     //lookup product stock
     const {data} = await supabase.from("products").select("stock").eq('id', product.product_id)
@@ -111,7 +111,7 @@ const updateStock = (req, res, next) => {
     await supabase.from("products").update({stock: updatedStock}).eq("id", product.product_id)
     
   });
-  res.status(200).send("updated");
+  res.status(200).send("Order successfully created");
 };
 //DELETE actions
 

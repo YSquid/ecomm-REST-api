@@ -130,7 +130,6 @@ const checkoutCart = async (req, res, next) => {
     .from("carts_products")
     .select("cart_id, product_id, product_count")
     .eq("cart_id", user_id);
-  // console.log(data);
   const productCount = data.length;
 
   //create the order in orders, return the data
@@ -146,74 +145,27 @@ const checkoutCart = async (req, res, next) => {
     let product_id = data[i].product_id;
     let product_count = data[i].product_count;
 
-    const innerData = await supabase
+    await supabase
       .from("orders_products")
       .insert({
         order_id: orderId,
         product_id: product_id,
         product_count: product_count,
       })
-      .select();
-      // console.log(innerData)
+      
+   
   }
 
   //delete from carts_products
   await supabase.from("carts_products").delete().eq('cart_id', user_id);
 
 
-
   let finalData = await supabase.from("orders_products").select().eq('order_id', orderId)
   res.locals.orders_products = finalData.data;
   next();
-
-  // const query = `
-  // WITH user_carts_products AS (
-  //   DELETE FROM carts_products
-  //     USING carts
-  //   WHERE carts.id = carts_products.cart_id AND carts.user_id = ${user_id}
-  //   RETURNING product_id, product_count
-  // ),
-  // current_order AS (
-  //   INSERT INTO orders (user_id, add_time)
-  //   VALUES (${user_id}, current_timestamp)
-  //   RETURNING id AS order_id
-  // ),
-  // current_order_products AS (
-  //   SELECT * FROM current_order
-  //   CROSS JOIN user_carts_products
-  // )
-
-  // INSERT INTO orders_products (order_id, product_id, product_count, add_time)
-  // SELECT order_id, product_id, product_count, current_timestamp FROM current_order_products
-  // RETURNING *`;
-
-  // pool.query(query, (error, results) => {
-  //   if (error) {
-  //     next(error);
-  //   } else {
-  //     res.locals.orders_products = results.rows;
-  //     next();
-  //   }
-  // });
 };
 
-//PUT actions
 
-const updateCart = (req, res, next) => {
-  const { id } = req.params;
-  const { user_id } = req.body;
-  pool.query(
-    "UPDATE carts SET user_id = $2 WHERE id = $1 RETURNING id, user_id;",
-    [id, user_id],
-    (error, results) => {
-      if (error) {
-        next(error);
-      } else {
-        res.status(200).send(results.rows);
-      }
-    }
-  );
-};
 
 const addOneToCart = (req, res, next) => {
   const { cart_id, product_id } = req.query;
@@ -247,27 +199,48 @@ const subtractOneFromCart = (req, res, next) => {
   );
 };
 
-//DELETE actions
-
-const deleteCart = (req, res, next) => {
-  const { id } = req.params;
-  pool.query("DELETE FROM carts WHERE id = $1", [id], (error) => {
-    if (error) {
-      next(error);
-    } else {
-      res.status(200).send(`Cart with id: ${id} deleted`);
-    }
-  });
-};
 
 module.exports = {
   getCarts,
   getCartById,
   addProductToCart,
-  updateCart,
   addOneToCart,
   subtractOneFromCart,
   confirmStock,
   checkoutCart,
-  deleteCart,
+
 };
+
+
+
+//PUT actions
+//DEPRECATED - UNLIKELY TO EVER BE NEEDED
+// const updateCart = (req, res, next) => {
+//   const { id } = req.params;
+//   const { user_id } = req.body;
+//   pool.query(
+//     "UPDATE carts SET user_id = $2 WHERE id = $1 RETURNING id, user_id;",
+//     [id, user_id],
+//     (error, results) => {
+//       if (error) {
+//         next(error);
+//       } else {
+//         res.status(200).send(results.rows);
+//       }
+//     }
+//   );
+// };
+
+
+//DELETE actions
+//DEPRECATED - DELETIONS SHOULD HAPPEN AT USER, NEVER JUST ON CART
+// const deleteCart = (req, res, next) => {
+//   const { id } = req.params;
+//   pool.query("DELETE FROM carts WHERE id = $1", [id], (error) => {
+//     if (error) {
+//       next(error);
+//     } else {
+//       res.status(200).send(`Cart with id: ${id} deleted`);
+//     }
+//   });
+// };
