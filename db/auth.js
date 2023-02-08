@@ -31,7 +31,7 @@ const checkAuthenticated = (req, res, next) => {
   if (req.isAuthenticated()) {
     return next();
   }
-
+  console.log("Access denied - must be logged in");
   res.redirect("/login");
 };
 
@@ -42,8 +42,8 @@ const getUserById = async (id) => {
 };
 
 const isSuperUser = async (req, res, next) => {
-    const {id} = req.params
-    const {data} = await supabase.from("users").select("superuser").eq('id', id)
+    const user_id = req.session.passport.user
+    const {data} = await supabase.from("users").select("superuser").eq('id', user_id);
     if (data[0].superuser) {
         next();
     } else {
