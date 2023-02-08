@@ -2,11 +2,12 @@ const express = require("express");
 const cartsRouter = express.Router();
 const db_carts = require("../db/carts.js");
 const db_products = require("../db/products.js");
+const db_auth = require("../db/auth");
 
 module.exports = cartsRouter;
 
 //GET all carts
-cartsRouter.get("/", db_carts.getCarts);
+cartsRouter.get("/", db_auth.isSuperUser, db_carts.getCarts);
 
 //GET carts by id
 cartsRouter.get("/:id", db_carts.getCartById);

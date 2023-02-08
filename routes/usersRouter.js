@@ -6,19 +6,15 @@ const db_auth = require('../db/auth')
 module.exports = usersRouter;
 
 //GET all users - psql database
-usersRouter.get('/', db_users.getUsers)
+usersRouter.get('/', db_auth.checkAuthenticated, db_auth.isSuperUser, db_users.getUsers)
 
 //GET user by emil - psql database
-usersRouter.get('/:id', db_auth.isSuperUser, db_users.getUserById)
-
-//POST user
-//Deprecated - adding users is handled with register route
-// usersRouter.post('/', db_users.addUser)
+usersRouter.get('/:id', db_auth.checkAuthenticated, db_users.getUserById)
 
 
 //PUT user
-usersRouter.put('/:email', db_users.updateUser)
+usersRouter.put('/:id', db_auth.checkAuthenticated, db_users.updateUser)
 
 //DELETE user
 //Testing - this is tested in app.test.js via the 'deletes registertest user' test
-usersRouter.delete('/:email', db_users.deleteUserById)
+usersRouter.delete('/:id', db_auth.checkAuthenticated, db_users.deleteUserById)

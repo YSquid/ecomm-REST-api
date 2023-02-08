@@ -47,12 +47,12 @@ const addUser = async (req, res, next) => {
 //PUT actions
 
 const updateUser = async (req, res, next) => {
-  const { email } = req.params;
+  const { id } = req.params;
   const { password, superuser } = req.body;
   const { data, error } = await supabase
     .from("users")
     .update({ password: password, superuser: superuser })
-    .eq("email", email)
+    .eq("id", id)
     .select();
 
     if (error) {

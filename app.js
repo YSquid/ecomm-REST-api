@@ -33,7 +33,7 @@ passport.deserializeUser((id, done) => {
   return done(null, db_auth.getUserById(id));
 });
 
-//Show login details
+// Show login details
 // let showlogs = (req, res, next) => {
 //   console.log(`=== Session ===`)
 //   console.log(req.session)

@@ -1,6 +1,7 @@
 const express = require("express");
 const productsRouter = express.Router();
-const db_products = require('../db/products.js')
+const db_products = require("../db/products.js");
+const db_auth = require("../db/auth");
 
 module.exports = productsRouter;
 
@@ -11,14 +12,11 @@ productsRouter.get("/", db_products.getProducts);
 productsRouter.get("/:id", db_products.getProductById);
 
 //POST product
-productsRouter.post('/', db_products.addProduct)
+productsRouter.post("/", db_auth.checkAuthenticated, db_auth.isSuperUser, db_products.addProduct);
 
 //PUT product
-productsRouter.put('/:id', db_products.updateProduct)
-
-//testing update stock
-// productsRouter.put('/updateStock', db_products.updateStock)
+productsRouter.put("/:id", db_auth.checkAuthenticated, db_auth.isSuperUser, db_products.updateProduct);
 
 //DELETE product
 
-productsRouter.delete('/:id', db_products.deleteProduct)
+productsRouter.delete("/:id", db_auth.checkAuthenticated, db_auth.isSuperUser, db_products.deleteProduct);
