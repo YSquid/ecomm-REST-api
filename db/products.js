@@ -117,7 +117,7 @@ const updateStock = (req, res, next) => {
 
 const deleteProduct = async (req, res, next) => {
   const { id } = req.params;
-  const {data, error} = await supabase.from("products").delete().eq('id', id);
+  const {error} = await supabase.from("products").delete().eq('id', id);
   if (error) {
     res.status(404);
     next(error.message);

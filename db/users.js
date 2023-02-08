@@ -63,18 +63,7 @@ const updateUser = async (req, res, next) => {
     }
 };
 
-//DELETE actions
-//DEPRECATED - using email as identity for actions
-// const deleteUserById = (req, res, next) => {
-//   const { id } = req.params;
-//   pool.query("DELETE FROM users WHERE id = $1", [id], (error) => {
-//     if (error) {
-//       next(error);
-//     } else {
-//       res.status(200).send(`User with id: ${id} deleted`);
-//     }
-//   });
-// };
+
 
 const deleteUserByEmail = async (req, res, next) => {
   const { email } = req.params;
@@ -95,3 +84,6 @@ module.exports = {
   updateUser,
   deleteUserByEmail,
 };
+
+
+

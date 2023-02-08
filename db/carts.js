@@ -106,7 +106,6 @@ const confirmStock = async (req, res, next) => {
       return product.product_count <= product.products.stock;
     })
   ) {
-    // res.send("send to next in live");
     next();
   } else {
     const outOfStock = data.filter((product) => {
@@ -126,7 +125,7 @@ const checkoutCart = async (req, res, next) => {
   const { user_id } = req.params;
 
   //fetch the info carts_products needed to make orders and orders_products entries
-  const { data, error } = await supabase
+  const { data } = await supabase
     .from("carts_products")
     .select("cart_id, product_id, product_count")
     .eq("cart_id", user_id);
@@ -219,33 +218,3 @@ module.exports = {
   checkoutCart,
 };
 
-//PUT actions
-//DEPRECATED - UNLIKELY TO EVER BE NEEDED
-// const updateCart = (req, res, next) => {
-//   const { id } = req.params;
-//   const { user_id } = req.body;
-//   pool.query(
-//     "UPDATE carts SET user_id = $2 WHERE id = $1 RETURNING id, user_id;",
-//     [id, user_id],
-//     (error, results) => {
-//       if (error) {
-//         next(error);
-//       } else {
-//         res.status(200).send(results.rows);
-//       }
-//     }
-//   );
-// };
-
-//DELETE actions
-//DEPRECATED - DELETIONS SHOULD HAPPEN AT USER, NEVER JUST ON CART
-// const deleteCart = (req, res, next) => {
-//   const { id } = req.params;
-//   pool.query("DELETE FROM carts WHERE id = $1", [id], (error) => {
-//     if (error) {
-//       next(error);
-//     } else {
-//       res.status(200).send(`Cart with id: ${id} deleted`);
-//     }
-//   });
-// };
