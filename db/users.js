@@ -13,12 +13,12 @@ const getUsers = async (req, res, next) => {
   }
 };
 
-const getUserByEmail = async (req, res, next) => {
-  const { email } = req.params;
+const getUserById = async (req, res, next) => {
+  const { id } = req.params;
   const { data, error } = await supabase
     .from("users")
     .select()
-    .eq("email", email);
+    .eq("id", id);
   if (error) {
     res.status(404);
     next(error.message);
@@ -79,7 +79,7 @@ const deleteUserByEmail = async (req, res, next) => {
 
 module.exports = {
   getUsers,
-  getUserByEmail,
+  getUserById,
   addUser,
   updateUser,
   deleteUserByEmail,

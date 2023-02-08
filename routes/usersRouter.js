@@ -8,7 +8,7 @@ module.exports = usersRouter;
 usersRouter.get('/', db_users.getUsers)
 
 //GET user by emil - psql database
-usersRouter.get('/:email', db_users.getUserByEmail)
+usersRouter.get('/:email', db_users.getUserById)
 
 //POST user
 //Deprecated - adding users is handled with register route

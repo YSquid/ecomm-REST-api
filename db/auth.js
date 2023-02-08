@@ -35,8 +35,8 @@ const checkAuthenticated = (req, res, next) => {
   res.redirect("/login");
 };
 
-const getUserByEmail = async (email) => {
-  const {data} = await supabase.from("users").select('email').eq('email', email);
+const getUserById = async (id) => {
+  const {data} = await supabase.from("users").select('id').eq('id', id);
   if (data.length == 0) return false;
   return data[0];
 };
@@ -46,5 +46,5 @@ module.exports = {
   createUser,
   matchPassword,
   checkAuthenticated,
-  getUserByEmail,
+  getUserById,
 };

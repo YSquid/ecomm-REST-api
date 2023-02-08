@@ -27,13 +27,13 @@ app.use(passport.session());
 
 //serialize and deserialize user
 passport.serializeUser((user, done) => {
-  return done(null, user.email);
+  return done(null, user.id);
 });
-passport.deserializeUser((email, done) => {
-  return done(null, db_auth.getUserByEmail(email));
+passport.deserializeUser((id, done) => {
+  return done(null, db_auth.getUserById(id));
 });
 
-//Show logs
+//Show login details
 let showlogs = (req, res, next) => {
   console.log(`=== Session ===`)
   console.log(req.session)
@@ -54,10 +54,12 @@ app.get("/", (req, res) => {
 });
 
 //Login routes
+//login page general
 app.get("/login", (req, res) => {
   res.render("login.ejs");
 });
 
+//local login post
 app.post(
   "/login",
   passport.authenticate("local-login", { session: true }),
@@ -65,6 +67,15 @@ app.post(
     res.redirect("/api");
   }
 );
+
+//google login post
+app.post(
+  "/login/google",
+  (req, res) => {
+    console.log(`Logged in with google`)
+    res.redirect("/api")
+  }
+)
 
 //Logout route
 app.post("/logout", (req, res) => {
