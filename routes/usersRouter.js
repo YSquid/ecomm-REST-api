@@ -20,4 +20,4 @@ usersRouter.put('/:email', db_users.updateUser)
 
 //DELETE user
 //Testing - this is tested in app.test.js via the 'deletes registertest user' test
-usersRouter.delete('/:email', db_users.deleteUserByEmail)
+usersRouter.delete('/:email', db_users.deleteUserById)

@@ -65,15 +65,15 @@ const updateUser = async (req, res, next) => {
 
 
 
-const deleteUserByEmail = async (req, res, next) => {
-  const { email } = req.params;
-  const {data, error} = await supabase.from("users").delete().eq('email', email);
+const deleteUserById = async (req, res, next) => {
+  const { id } = req.params;
+  const {data, error} = await supabase.from("users").delete().eq('id', id);
 
   if (error) {
     res.status(404);
     next(error.message);
   } else {
-    res.status(200).send(`User with the email: ${email} deleted`);
+    res.status(200).send(`User with the id: ${id} deleted`);
   }
 };
 
@@ -82,7 +82,7 @@ module.exports = {
   getUserById,
   addUser,
   updateUser,
-  deleteUserByEmail,
+  deleteUserById,
 };
 
 
