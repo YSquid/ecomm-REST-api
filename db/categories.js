@@ -1,78 +1,70 @@
-const pool = require("./index.js");
+const supabase = require("./index");
 
 //GET actions
-const getCategories = (req, res, next) => {
-  pool.query("SELECT * FROM categories ORDER BY id ASC;", (error, results) => {
-    if (error) {
-      next(error);
-    } else {
-      res.status(200).send(results.rows);
-    }
-  });
+const getCategories = async (req, res, next) => {
+  const { data, error } = await supabase.from("categories").select();
+  if (error) {
+    next(error.message);
+  } else {
+    res.status(200).send(data);
+  }
 };
 
-const getCategoryById = (req, res, next) => {
+const getCategoryById = async (req, res, next) => {
   const { id } = req.params;
-  pool.query(
-    "SELECT * FROM categories WHERE id = $1;",
-    [id],
-    (error, results) => {
-      if (error) {
-        next(error);
-      } else {
-        res.status(200).send(results.rows);
-      }
-    }
-  );
+  const { data, error } = await supabase
+    .from("categories")
+    .select()
+    .eq("id", id);
+  if (error) {
+    next(error);
+  } else {
+    res.status(200).send(data);
+  }
 };
 
 //POST actions
 
-const addCategory = (req, res, next) => {
+const addCategory = async (req, res, next) => {
   const { name, description } = req.body;
-  pool.query(
-    `INSERT INTO categories (name, description) 
-    VALUES ($1, $2) RETURNING id, name, description;`,
-    [name, description],
-    (error, results) => {
-      if (error) {
-        next(error);
-      } else {
-        res.status(201).send(results.rows);
-      }
-    }
-  );
+  const { data, error } = await supabase
+    .from("categories")
+    .insert({ name: name, description: description })
+    .select();
+  if (error) {
+    next(error.message);
+  } else {
+    res.status(201).send(data);
+  }
 };
 
 //PUT actions
 
-const updateCategory = (req, res, next) => {
+const updateCategory = async (req, res, next) => {
   const { id } = req.params;
-  const { name, description} = req.body;
-  pool.query(
-    "UPDATE categories SET name = $2, description = $3 WHERE id = $1 RETURNING id, name, description",
-    [id, name, description],
-    (error, results) => {
-      if (error) {
-        next(error);
-      } else {
-        res.status(200).send(results.rows);
-      }
-    }
-  );
+  const { name, description } = req.body;
+  const { data, error } = await supabase
+    .from("categories")
+    .update({ name: name, description: description })
+    .eq("id", id)
+    .select();
+  if (error) {
+    next(error.message);
+  } else {
+    res.status(200).send(data);
+  }
 };
 
 //DELETE actions
 
-const deleteCategory = (req, res, next) => {
+const deleteCategory = async (req, res, next) => {
   const { id } = req.params;
-  pool.query("DELETE FROM categories WHERE id = $1", [id], (error) => {
-    if (error) {
-      next(error);
-    } else {
-      res.status(200).send(`Category with id: ${id} deleted`);
-    }
-  });
+  const { error } = await supabase.from("categories").delete().eq("id", id);
+  if (error) {
+    next(error.message);
+  } else {
+    res.status(200).send(`Category with id ${id} deleted`);
+  }
 };
 
 module.exports = {
@@ -80,5 +72,5 @@ module.exports = {
   getCategoryById,
   addCategory,
   updateCategory,
-  deleteCategory
+  deleteCategory,
 };

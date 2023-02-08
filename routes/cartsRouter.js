@@ -13,6 +13,7 @@ cartsRouter.get("/:id", db_carts.getCartById);
 
 //POST cart
 cartsRouter.post("/", db_products.checkStock, db_carts.addProductToCart);
+
 cartsRouter.post(
   "/checkout/:user_id",
   db_carts.confirmStock,
@@ -21,9 +22,13 @@ cartsRouter.post(
 );
 
 //PUT cart
-cartsRouter.put("/updatecart/:id", db_carts.updateCart);
+// cartsRouter.put("/updatecart/:id", db_carts.updateCart);
 cartsRouter.put("/plusone/", db_carts.addOneToCart);
 cartsRouter.put("/minusone/", db_carts.subtractOneFromCart);
 
-//DELETE cart
-cartsRouter.delete("/:id", db_carts.deleteCart);
+
+
+
+// DEPRECATED
+// cartsRouter.put("/updatecart/:id", db_carts.updateCart);
+// cartsRouter.delete("/:id", db_carts.deleteCart);
