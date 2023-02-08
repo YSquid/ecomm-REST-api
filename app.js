@@ -27,11 +27,22 @@ app.use(passport.session());
 
 //serialize and deserialize user
 passport.serializeUser((user, done) => {
-  return done(null, user.id);
+  return done(null, user.email);
 });
-passport.deserializeUser((id, done) => {
-  return done(null, db_auth.getUserById(id));
+passport.deserializeUser((email, done) => {
+  return done(null, db_auth.getUserByEmail(email));
 });
+
+//Show logs
+let showlogs = (req, res, next) => {
+  console.log(`=== Session ===`)
+  console.log(req.session)
+  console.log(`=== Passport ===`)
+  console.log(req.session.passport)
+  next();
+}
+
+app.use(showlogs);
 
 //Mount apiRouter (from routes/api) at '/api' path
 const apiRouter = require("./routes/api");
