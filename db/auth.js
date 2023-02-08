@@ -41,10 +41,21 @@ const getUserById = async (id) => {
   return data[0];
 };
 
+const isSuperUser = async (req, res, next) => {
+    const {id} = req.params
+    const {data} = await supabase.from("users").select("superuser").eq('id', id)
+    if (data[0].superuser) {
+        next();
+    } else {
+        res.send("Access denied - must be superuser");
+    }
+}
+
 module.exports = {
   emailExists,
   createUser,
   matchPassword,
   checkAuthenticated,
   getUserById,
+  isSuperUser
 };
