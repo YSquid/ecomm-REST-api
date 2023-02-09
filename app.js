@@ -7,13 +7,14 @@ const session = require("express-session");
 const bodyParser = require("body-parser");
 require("./passportConfig")(passport);
 const db_auth = require('./db/auth')
+const cors = require('cors')
 
 module.exports = app;
 
 //Middleware stack
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: false }));
-
+app.use(cors());
 //Define session variables and intialize session
 app.use(
   session({
@@ -63,7 +64,9 @@ app.post(
   "/login",
   passport.authenticate("local-login", { session: true }),
   (req, res) => {
-    res.redirect("/api");
+    res.send({
+      token: req.session.passport.user
+    })
   }
 );
 
@@ -81,7 +84,7 @@ app.post("/logout", (req, res) => {
   req.logout((error) => {
     if (error) {return next(error)}
   })
-  res.redirect("/login")
+  res.redirect("/products")
 } )
 
 //Register route
@@ -93,7 +96,7 @@ app.post(
   "/register",
   passport.authenticate("local-signup", { session: true }),
   (req, res, next) => {
-    res.redirect("/login/?email=");
+    res.status(201).json({user: req.session.passport.user});
   }
 );
 
