@@ -14,9 +14,7 @@ module.exports = app;
 //Middleware stack
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(cors({
-  origin: '*'
-}));
+app.use(cors());
 //Define session variables and intialize session
 app.use(
   session({
@@ -25,7 +23,7 @@ app.use(
     saveUninitialized: false,
     sameSite: "none",
     cookie: { maxAge: 86400 },
-    httpOnly: false,
+    secure: false,
   })
 );
 app.use(passport.initialize());
@@ -40,16 +38,14 @@ passport.deserializeUser((id, done) => {
 });
 
 // Show login details
-let showlogs = (req, res, next) => {
-  console.log(`=== Session ===`);
-  console.log(req.session);
-  console.log(`=== Passport ===`);
-  console.log(req.session.passport);
-  console.log(`===USER===`);
-  console.log(req.user);
-  next();
-};
-app.use(showlogs);
+// let showlogs = (req, res, next) => {
+//   console.log(`=== Session ===`);
+//   console.log(req.session);
+//   console.log(`=== Passport ===`);
+//   console.log(req.session.passport);
+//   next();
+// };
+// app.use(showlogs);
 
 //Mount apiRouter (from routes/api) at '/api' path
 const apiRouter = require("./routes/api");
@@ -62,24 +58,21 @@ app.get("/", (req, res) => {
 
 //Login routes
 //login page general
-app.get("/login", (req, res) => {
+app.get("/login", db_auth.isLoggedIn, (req, res) => {
   res.render("login.ejs");
 });
 
 //local login post
 app.post(
   "/login",
-  passport.authenticate("local-login", { session: true }),
+  passport.authenticate("local-login", {
+    session: true,
+  }),
   (req, res) => {
-    res.redirect("/api");
+    
+    res.json({ token: req.user.id });
   }
 );
-
-//google login post
-app.post("/login/google", (req, res) => {
-  console.log(`Logged in with google`);
-  res.redirect("/api");
-});
 
 //Logout route
 app.post("/logout", (req, res) => {

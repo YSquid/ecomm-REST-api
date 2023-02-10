@@ -28,13 +28,24 @@ const matchPassword = async (password, hashPassword) => {
 };
 
 const checkAuthenticated = (req, res, next) => {
-  if (req.isAuthenticated()) { 
+  console.log(req.user)
+  //req.user is reliably being made on login from frontend, so using that for checking auth
+  //requires sending users in the header everytime - bad idea
+  if (req.headers.user) { 
     return next();
   }
   console.log("Access denied - must be logged in");
   res.send("Access denied must be logged in")
   // res.redirect("/login");
 };
+
+const isLoggedIn = (req, res, next) => {
+  if (req.isAuthenticated()) {
+    res.redirect("/api")
+  } else {
+    next();
+  }
+}
 
 const getUserById = async (id) => {
   const {data} = await supabase.from("users").select('id').eq('id', id);
@@ -57,6 +68,7 @@ module.exports = {
   createUser,
   matchPassword,
   checkAuthenticated,
+  isLoggedIn,
   getUserById,
   isSuperUser
 };
