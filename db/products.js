@@ -47,7 +47,7 @@ const getProductById = async (req, res, next) => {
 //Check for stock of product is > 0
 
 const checkStock = async (req, res, next) => {
-  const { product_id, product_count } = req.query;
+  const { product_id, product_count } = req.body;
 
   const { data, error } = await supabase
     .from("products")

@@ -26,10 +26,10 @@ const getCartById = async (req, res, next) => {
 
 //POST actions
 
-//Add item to a cart using query params
+//Add item to a cart
 
 const addProductToCart = async (req, res, next) => {
-  const { cart_id, product_id, product_count } = req.query;
+  const { cart_id, product_id, product_count } = req.body;
 
   //select rows where the cart id and product id matches selection
   const { data, error } = await supabase
@@ -162,7 +162,7 @@ const checkoutCart = async (req, res, next) => {
 };
 
 const addOneToCart = async (req, res, next) => {
-  const { cart_id, product_id } = req.query;
+  const { cart_id, product_id } = req.body;
   //return current count in cart
   const { data, error } = await supabase
     .from("carts_products")
@@ -185,7 +185,7 @@ const addOneToCart = async (req, res, next) => {
 };
 
 const subtractOneFromCart = async (req, res, next) => {
-  const { cart_id, product_id } = req.query;
+  const { cart_id, product_id } = req.body;
   //return current count in cart
   const { data, error } = await supabase
     .from("carts_products")
