@@ -11,6 +11,16 @@ const getProducts = async (req, res) => {
   }
 };
 
+const getProductsByCategories = async (req, res) => {
+  const { categories } = req.body;
+  const { data, error } = await supabase.from("products").select().in('category_name', categories);
+  if (error) {
+    next(error.message)
+  } else {
+    res.status(200).send(data);
+  }
+};
+
 const getProductById = async (req, res, next) => {
   const { id } = req.params;
   try {
@@ -62,12 +72,15 @@ const checkStock = async (req, res, next) => {
 
 const addProduct = async (req, res, next) => {
   const { name, description, price, stock } = req.body;
-  const { data, error } = await supabase.from("products").insert({
-    name: name,
-    description: description,
-    price: price,
-    stock: stock,
-  }).select();
+  const { data, error } = await supabase
+    .from("products")
+    .insert({
+      name: name,
+      description: description,
+      price: price,
+      stock: stock,
+    })
+    .select();
 
   if (error) {
     res.status(404);
@@ -83,11 +96,16 @@ const updateProduct = async (req, res, next) => {
   const { id } = req.params;
   const { name, description, price, stock } = req.body;
 
-  const {data, error} = await supabase
-  .from("products")
-  .update({name: name, description: description, price: price, stock: stock})
-  .eq('id', id)
-  .select();
+  const { data, error } = await supabase
+    .from("products")
+    .update({
+      name: name,
+      description: description,
+      price: price,
+      stock: stock,
+    })
+    .eq("id", id)
+    .select();
 
   if (error) {
     res.status(404);
@@ -95,21 +113,22 @@ const updateProduct = async (req, res, next) => {
   } else {
     res.status(200).send(data);
   }
-
-  
 };
-
 //Update stock - run after a cart checkout middlware
 
 const updateStock = (req, res, next) => {
-  
   res.locals.orders_products.forEach(async (product) => {
     //lookup product stock
-    const {data} = await supabase.from("products").select("stock").eq('id', product.product_id)
+    const { data } = await supabase
+      .from("products")
+      .select("stock")
+      .eq("id", product.product_id);
     let currentStock = Number(data[0].stock);
-    let updatedStock = currentStock - product.product_count
-    await supabase.from("products").update({stock: updatedStock}).eq("id", product.product_id)
-    
+    let updatedStock = currentStock - product.product_count;
+    await supabase
+      .from("products")
+      .update({ stock: updatedStock })
+      .eq("id", product.product_id);
   });
   res.status(200).send("Order successfully created");
 };
@@ -117,7 +136,7 @@ const updateStock = (req, res, next) => {
 
 const deleteProduct = async (req, res, next) => {
   const { id } = req.params;
-  const {error} = await supabase.from("products").delete().eq('id', id);
+  const { error } = await supabase.from("products").delete().eq("id", id);
   if (error) {
     res.status(404);
     next(error.message);
@@ -130,6 +149,7 @@ const deleteProduct = async (req, res, next) => {
 module.exports = {
   getProducts,
   getProductById,
+  getProductsByCategories,
   addProduct,
   updateProduct,
   checkStock,

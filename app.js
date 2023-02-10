@@ -84,7 +84,7 @@ app.post("/logout", (req, res) => {
   req.logout((error) => {
     if (error) {return next(error)}
   })
-  res.redirect("/products")
+  res.status(200).send("Logged Out")
 } )
 
 //Register route
