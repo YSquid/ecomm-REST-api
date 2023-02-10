@@ -6,21 +6,26 @@ const passport = require("passport");
 const session = require("express-session");
 const bodyParser = require("body-parser");
 require("./passportConfig")(passport);
-const db_auth = require('./db/auth')
-const cors = require('cors')
+const db_auth = require("./db/auth");
+const cors = require("cors");
 
 module.exports = app;
 
 //Middleware stack
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(cors());
+app.use(cors({
+  origin: '*'
+}));
 //Define session variables and intialize session
 app.use(
   session({
     secret: process.env.SESSION_SECRET,
-    resave: false,
+    resave: true,
     saveUninitialized: false,
+    sameSite: "none",
+    cookie: { maxAge: 86400 },
+    httpOnly: false,
   })
 );
 app.use(passport.initialize());
@@ -36,12 +41,14 @@ passport.deserializeUser((id, done) => {
 
 // Show login details
 let showlogs = (req, res, next) => {
-  console.log(`=== Session ===`)
-  console.log(req.session)
-  console.log(`=== Passport ===`)
-  console.log(req.session.passport)
+  console.log(`=== Session ===`);
+  console.log(req.session);
+  console.log(`=== Passport ===`);
+  console.log(req.session.passport);
+  console.log(`===USER===`);
+  console.log(req.user);
   next();
-}
+};
 app.use(showlogs);
 
 //Mount apiRouter (from routes/api) at '/api' path
@@ -64,29 +71,25 @@ app.post(
   "/login",
   passport.authenticate("local-login", { session: true }),
   (req, res) => {
-    res.send({
-      token: req.session.passport.user
-    })
+    res.redirect("/api");
   }
 );
 
 //google login post
-app.post(
-  "/login/google",
-  (req, res) => {
-    console.log(`Logged in with google`)
-    res.redirect("/api")
-  }
-)
-
+app.post("/login/google", (req, res) => {
+  console.log(`Logged in with google`);
+  res.redirect("/api");
+});
 
 //Logout route
 app.post("/logout", (req, res) => {
   req.logout((error) => {
-    if (error) {return next(error)}
-  })
-  res.status(200).send("Logged Out")
-} )
+    if (error) {
+      return next(error);
+    }
+  });
+  res.status(200).send("Logged Out");
+});
 
 //Register route
 app.get("/register", (req, res) => {
@@ -97,7 +100,7 @@ app.post(
   "/register",
   passport.authenticate("local-signup", { session: true }),
   (req, res, next) => {
-    res.status(201).json({user: req.session.passport.user});
+    res.status(201).json({ user: req.session.passport.user });
   }
 );
 
@@ -111,7 +114,6 @@ app.use((err, req, res, next) => {
         err
     );
 });
-
 
 app.listen(PORT, () => {
   console.log(`App listening on port: ${PORT}`);

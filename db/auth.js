@@ -28,11 +28,12 @@ const matchPassword = async (password, hashPassword) => {
 };
 
 const checkAuthenticated = (req, res, next) => {
-  if (req.isAuthenticated()) {
+  if (req.isAuthenticated()) { 
     return next();
   }
   console.log("Access denied - must be logged in");
-  res.redirect("/login");
+  res.send("Access denied must be logged in")
+  // res.redirect("/login");
 };
 
 const getUserById = async (id) => {
