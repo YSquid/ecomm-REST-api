@@ -14,7 +14,6 @@ const createUser = async (email, password) => {
   const hash = await bcrypt.hash(password, salt);
 
   const {data} = await supabase.from("users").insert({email: email, password: hash, superuser: 'false'}).select();
-  console.log(data)
 
   //can't insert user into table condition
   if (data.length == 0) return false;
@@ -28,13 +27,9 @@ const matchPassword = async (password, hashPassword) => {
 };
 
 const checkAuthenticated = (req, res, next) => {
-  console.log(req.user)
-  //req.user is reliably being made on login from frontend, so using that for checking auth
-  //requires sending users in the header everytime - bad idea
-  if (req.headers.user) { 
+  if (req.isAuthenticated()) { 
     return next();
   }
-  console.log("Access denied - must be logged in");
   res.send("Access denied must be logged in")
   // res.redirect("/login");
 };

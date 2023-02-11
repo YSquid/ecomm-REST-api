@@ -7,23 +7,37 @@ const session = require("express-session");
 const bodyParser = require("body-parser");
 require("./passportConfig")(passport);
 const db_auth = require("./db/auth");
-const cors = require("cors");
+// const cors = require("cors");
 
 module.exports = app;
 
 //Middleware stack
+//allows cross and setting of session for passport https://stackoverflow.com/questions/19043511/passport-js-fails-to-maintain-session-in-cross-domain
+app.use(function(req, res, next) {
+  res.header('Access-Control-Allow-Credentials', true);
+  res.header('Access-Control-Allow-Origin', req.headers.origin);
+  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+  res.header('Access-Control-Allow-Headers', 'X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept');
+  if ('OPTIONS' == req.method) {
+       res.send(200);
+   } else {
+       next();
+   }
+  });
+
+
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(cors());
+
 //Define session variables and intialize session
 app.use(
   session({
     secret: process.env.SESSION_SECRET,
     resave: true,
     saveUninitialized: false,
-    sameSite: "none",
-    cookie: { maxAge: 86400 },
-    secure: false,
+    // sameSite: "none",
+    // cookie: { maxAge: 86400 },
+    // secure: false,
   })
 );
 app.use(passport.initialize());
@@ -69,7 +83,6 @@ app.post(
     session: true,
   }),
   (req, res) => {
-    
     res.json({ token: req.user.id });
   }
 );
