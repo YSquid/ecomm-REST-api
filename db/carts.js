@@ -24,6 +24,17 @@ const getCartById = async (req, res, next) => {
   }
 };
 
+const getCartsProductsById = async (req, res, next) => {
+  const {id} = req.params;
+  const {data, error} = await supabase.from("carts_products").select().eq("cart_id", id)
+
+  if (error) {
+    next(error.message);
+  } else {
+    res.status(200).send(data);
+  }
+}
+
 //POST actions
 
 //Add item to a cart
@@ -210,6 +221,7 @@ const subtractOneFromCart = async (req, res, next) => {
 module.exports = {
   getCarts,
   getCartById,
+  getCartsProductsById,
   addProductToCart,
   addOneToCart,
   subtractOneFromCart,

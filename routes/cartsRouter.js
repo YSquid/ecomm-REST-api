@@ -12,6 +12,9 @@ cartsRouter.get("/", db_auth.isSuperUser, db_carts.getCarts);
 //GET carts by id
 cartsRouter.get("/:id", db_carts.getCartById);
 
+//GET cart products by id
+cartsRouter.get("/cartproducts/:id", db_carts.getCartsProductsById);
+
 //POST cart
 cartsRouter.post("/", db_products.checkStock, db_carts.addProductToCart);
 
