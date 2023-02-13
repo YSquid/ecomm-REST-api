@@ -12,6 +12,9 @@ ordersRouter.get("/", db_auth.isSuperUser, db_orders.getOrders);
 //GET order by id
 ordersRouter.get("/:id", db_orders.getOrderById);
 
+//GET order products by id
+ordersRouter.get("/orderproducts/:id", db_orders.getOrderProductsById);
+
 //POST order
 ordersRouter.post('/', db_orders.addOrder);
 

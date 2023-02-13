@@ -24,6 +24,18 @@ const getOrderById = async (req, res, next) => {
   }
 };
 
+const getOrderProductsById = async (req, res, next) => {
+  const {id} = req.params;
+  const {data, error} = await supabase.from("orders_products").select().eq("order_id", id) 
+
+  if (error) {
+    next(error.message);
+  } else {
+    res.status(200).send(data);
+  }
+
+}
+
 //POST actions
 
 const addOrder = async (req, res, next) => {
@@ -81,6 +93,7 @@ const deleteOrder = async (req, res, next) => {
 module.exports = {
   getOrders,
   getOrderById,
+  getOrderProductsById,
   addOrder,
   updateOrder,
   deleteOrder,
