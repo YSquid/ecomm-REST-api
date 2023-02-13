@@ -24,17 +24,32 @@ const getOrderById = async (req, res, next) => {
   }
 };
 
+const getOrdersByUserId = async (req, res, next) => {
+  const { id } = req.params;
+  const { data, error } = await supabase
+    .from("orders")
+    .select()
+    .eq("user_id", id);
+  if (error) {
+    next(error.message);
+  } else {
+    res.status(200).send(data);
+  }
+};
+
 const getOrderProductsById = async (req, res, next) => {
-  const {id} = req.params;
-  const {data, error} = await supabase.from("orders_products").select().eq("order_id", id) 
+  const { id } = req.params;
+  const { data, error } = await supabase
+    .from("orders_products")
+    .select()
+    .eq("order_id", id);
 
   if (error) {
     next(error.message);
   } else {
     res.status(200).send(data);
   }
-
-}
+};
 
 //POST actions
 
@@ -71,8 +86,6 @@ const updateOrder = async (req, res, next) => {
   } else {
     res.status(200).send(data);
   }
-
- 
 };
 
 //DELETE actions
@@ -80,7 +93,7 @@ const updateOrder = async (req, res, next) => {
 const deleteOrder = async (req, res, next) => {
   const { id } = req.params;
 
-  const {data, error} = await supabase.from("orders").delete().eq('id', id);
+  const { data, error } = await supabase.from("orders").delete().eq("id", id);
 
   if (error) {
     res.status(404);
@@ -93,6 +106,7 @@ const deleteOrder = async (req, res, next) => {
 module.exports = {
   getOrders,
   getOrderById,
+  getOrdersByUserId,
   getOrderProductsById,
   addOrder,
   updateOrder,
