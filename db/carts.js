@@ -40,7 +40,7 @@ const getCartsProductsById = async (req, res, next) => {
 //Add item to a cart
 
 const addProductToCart = async (req, res, next) => {
-  const { cart_id, product_id, product_name, product_count } = req.body;
+  const { cart_id, product_id, product_name, product_price, product_count } = req.body;
 
   //select rows where the cart id and product id matches selection
   const { data, error } = await supabase
@@ -83,6 +83,7 @@ const addProductToCart = async (req, res, next) => {
           cart_id: cart_id,
           product_id: product_id,
           product_name: product_name,
+          product_price: product_price,
           product_count: product_count,
         })
         .select();
@@ -138,7 +139,7 @@ const checkoutCart = async (req, res, next) => {
   //fetch the info carts_products needed to make orders and orders_products entries
   const { data } = await supabase
     .from("carts_products")
-    .select("cart_id, product_id, product_name, product_count")
+    .select("cart_id, product_id, product_name, product_price, product_count")
     .eq("cart_id", user_id);
   const productCount = data.length;
 
@@ -155,11 +156,13 @@ const checkoutCart = async (req, res, next) => {
     let product_id = data[i].product_id;
     let product_count = data[i].product_count;
     let product_name = data[i].product_name;
+    let product_price = data[i].product_price;
 
     await supabase.from("orders_products").insert({
       order_id: orderId,
       product_id: product_id,
       product_name: product_name,
+      product_price: product_price,
       product_count: product_count,
     });
   }
