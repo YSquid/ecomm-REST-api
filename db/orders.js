@@ -29,7 +29,8 @@ const getOrdersByUserId = async (req, res, next) => {
   const { data, error } = await supabase
     .from("orders")
     .select()
-    .eq("user_id", id);
+    .eq("user_id", id)
+    .order('id', {ascending: false});
   if (error) {
     next(error.message);
   } else {
