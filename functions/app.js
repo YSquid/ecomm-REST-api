@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 require("dotenv").config();
+const serverless = require('serverless-http')
 const PORT = process.env.EXPRESS_PORT || 3000;
 const passport = require("passport");
 const session = require("express-session");
@@ -9,7 +10,6 @@ require("./passportConfig")(passport);
 const db_auth = require("./db/auth");
 // const cors = require("cors");
 
-module.exports = app;
 
 //Middleware stack
 //allows cross and setting of session for passport https://stackoverflow.com/questions/19043511/passport-js-fails-to-maintain-session-in-cross-domain
@@ -124,3 +124,6 @@ app.use((err, req, res, next) => {
 app.listen(PORT, () => {
   console.log(`App listening on port: ${PORT}`);
 });
+
+
+module.exports.handler = serverless(app);
