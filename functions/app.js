@@ -8,6 +8,7 @@ const session = require("express-session");
 const bodyParser = require("body-parser");
 require("./passportConfig")(passport);
 const db_auth = require("./db/auth");
+let ejs = require('ejs');
 // const cors = require("cors");
 
 
