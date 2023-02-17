@@ -90,13 +90,6 @@ app.post(
     session: true,
   }),
   (req, res) => {
-    const token = Math.random()
-    res.cookie('token', token, {
-      httpOnly:true,
-      maxAge:3600000*5,
-      secure:true,
-      sameSite:'none'
-    })
     res.json({ token: req.user.id });
   }
 );
