@@ -90,7 +90,6 @@ app.post(
     session: true,
   }),
   (req, res) => {
-    res.cookie('cookie_token', token, { maxAge: 900000 }) 
     res.json({ token: req.user.id });
   }
 );
