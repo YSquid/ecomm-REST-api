@@ -68,7 +68,7 @@ app.use("/api", apiRouter);
 
 //Homepage route
 app.get("/", (req, res) => {
-  res.render("home.ejs", { name: "Ahmad" });
+  res.render("./views/home.ejs", { name: "Ahmad" });
 });
 
 //Login routes
