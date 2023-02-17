@@ -52,6 +52,9 @@ passport.deserializeUser((id, done) => {
   return done(null, db_auth.getUserById(id));
 });
 
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname + '/views'));
+
 // Show login details
 // let showlogs = (req, res, next) => {
 //   console.log(`=== Session ===`);
@@ -68,7 +71,7 @@ app.use("/api", apiRouter);
 
 //Homepage route
 app.get("/", (req, res) => {
-  res.render("./views/home.ejs", { name: "Ahmad" });
+  res.render("home.ejs", { name: "Ahmad" });
 });
 
 //Login routes
