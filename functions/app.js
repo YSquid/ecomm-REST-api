@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
 require("dotenv").config();
-const serverless = require('serverless-http')
+const serverless = require("serverless-http");
 const PORT = process.env.EXPRESS_PORT || 3000;
 const passport = require("passport");
 const session = require("express-session");
@@ -10,21 +10,22 @@ require("./passportConfig")(passport);
 const db_auth = require("./db/auth");
 // const cors = require("cors");
 
-
 //Middleware stack
 //allows cross and setting of session for passport https://stackoverflow.com/questions/19043511/passport-js-fails-to-maintain-session-in-cross-domain
-app.use(function(req, res, next) {
-  res.header('Access-Control-Allow-Credentials', true);
-  res.header('Access-Control-Allow-Origin', req.headers.origin);
-  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
-  res.header('Access-Control-Allow-Headers', 'X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept');
-  if ('OPTIONS' == req.method) {
-       res.sendStatus(200);
-   } else {
-       next();
-   }
-  });
-
+app.use(function (req, res, next) {
+  res.header("Access-Control-Allow-Credentials", true);
+  res.header("Access-Control-Allow-Origin", req.headers.origin);
+  res.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept"
+  );
+  if ("OPTIONS" == req.method) {
+    res.sendStatus(200);
+  } else {
+    next();
+  }
+});
 
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: false }));
@@ -35,7 +36,6 @@ app.use(
     secret: process.env.SESSION_SECRET,
     resave: true,
     saveUninitialized: false,
-    // sameSite: "none",
     cookie: { maxAge: 86400 },
     secure: false,
   })
@@ -51,8 +51,11 @@ passport.deserializeUser((id, done) => {
   return done(null, db_auth.getUserById(id));
 });
 
-app.use(console.log(process.env.NODE_ENV))
-
+let showenv = (req, res, next) => {
+  console.log(process.env.NODE_ENV);
+  next();
+};
+app.use(showenv);
 
 // Show login details
 // let showlogs = (req, res, next) => {
@@ -127,6 +130,5 @@ app.use((err, req, res, next) => {
 app.listen(PORT, () => {
   console.log(`App listening on port: ${PORT}`);
 });
-
 
 module.exports.handler = serverless(app);
