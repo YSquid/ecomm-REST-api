@@ -38,7 +38,7 @@ app.use(
     secret: process.env.SESSION_SECRET,
     resave: true,
     saveUninitialized: false,
-    cookie: { maxAge: 86400 },
+    sameSite: 'none',
     secure: true,
   })
 );
@@ -90,6 +90,7 @@ app.post(
     session: true,
   }),
   (req, res) => {
+    console.log(res)
     res.json({ token: req.user.id });
   }
 );
