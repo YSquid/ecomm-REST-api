@@ -36,7 +36,7 @@ app.use(
     resave: true,
     saveUninitialized: false,
     // sameSite: "none",
-    // cookie: { maxAge: 86400 },
+    cookie: { maxAge: 86400 },
     // secure: false,
   })
 );
