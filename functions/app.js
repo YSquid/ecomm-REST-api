@@ -8,6 +8,7 @@ const session = require("express-session");
 const bodyParser = require("body-parser");
 require("./passportConfig")(passport);
 const db_auth = require("./db/auth");
+const cookieParser = require('cookie-parser')
 // const cors = require("cors");
 
 //Middleware stack
@@ -28,6 +29,7 @@ app.use(function (req, res, next) {
 });
 
 app.use(bodyParser.json());
+app.use(cookieParser());
 app.use(express.urlencoded({ extended: false }));
 
 //Define session variables and intialize session
