@@ -51,11 +51,6 @@ passport.deserializeUser((id, done) => {
   return done(null, db_auth.getUserById(id));
 });
 
-let showenv = (req, res, next) => {
-  console.log(process.env.NODE_ENV);
-  next();
-};
-app.use(showenv);
 
 // Show login details
 // let showlogs = (req, res, next) => {
@@ -75,6 +70,10 @@ app.use("/api", apiRouter);
 app.get("/", (req, res) => {
   res.send("Home page");
 });
+
+app.get('/env', (req, res) => {
+  res.send(process.env.NODE_ENV)
+})
 
 //Login routes
 //login page general
