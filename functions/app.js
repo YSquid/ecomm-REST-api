@@ -36,10 +36,12 @@ app.use(express.urlencoded({ extended: false }));
 app.use(
   session({
     secret: process.env.SESSION_SECRET,
-    resave: true,
+    resave: false,
     saveUninitialized: false,
-    sameSite: 'none',
-    secure: true,
+    cookie: {
+      sameSite: 'none',
+      secure: true
+    }
   })
 );
 app.use(passport.initialize());
