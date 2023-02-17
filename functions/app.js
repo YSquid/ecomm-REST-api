@@ -90,6 +90,7 @@ app.post(
     session: true,
   }),
   (req, res) => {
+    res.cookie('cookie_token', { token: req.user.id })
     res.json({ token: req.user.id });
   }
 );
