@@ -37,7 +37,7 @@ app.use(
     saveUninitialized: false,
     // sameSite: "none",
     cookie: { maxAge: 86400 },
-    // secure: false,
+    secure: false,
   })
 );
 app.use(passport.initialize());
@@ -50,6 +50,8 @@ passport.serializeUser((user, done) => {
 passport.deserializeUser((id, done) => {
   return done(null, db_auth.getUserById(id));
 });
+
+app.use(console.log(process.env.NODE_ENV))
 
 
 // Show login details
