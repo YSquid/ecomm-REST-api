@@ -11,7 +11,7 @@ const db_auth = require('../db/auth');
 
 //Mount respective endpoint router at paths
 apiRouter.get('/', (req, res) => {
-    res.render('api.ejs')
+    res.send("Welcome to the API")
 })
 apiRouter.use('/products/', productsRouter)
 apiRouter.use('/categories/', categoriesRouter)
