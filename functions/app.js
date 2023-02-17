@@ -72,7 +72,7 @@ app.get("/", (req, res) => {
 });
 
 app.get('/env', (req, res) => {
-  res.send(process.env.NODE_ENV)
+  res.send(process.env)
 })
 
 //Login routes
