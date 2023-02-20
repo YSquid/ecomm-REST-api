@@ -86,7 +86,7 @@ app.get("/login", db_auth.isLoggedIn, (req, res) => {
 //local login post
 app.post(
   "/login",
-  passport.authenticate("local-login", {session: true}),
+  passport.authenticate("local", {session: true}),
   (req, res) => {
     console.log(res)
     res.json({ token: req.user.id });
