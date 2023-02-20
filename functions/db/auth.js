@@ -27,6 +27,7 @@ const matchPassword = async (password, hashPassword) => {
 };
 
 const checkAuthenticated = (req, res, next) => {
+  console.log(`CONSOLE LOG IN CHECKAUTH ${req}`)
   if (req.isAuthenticated()) { 
     return next();
   }

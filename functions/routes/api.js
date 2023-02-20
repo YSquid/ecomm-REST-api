@@ -16,8 +16,8 @@ apiRouter.get('/', (req, res) => {
 apiRouter.use('/products/', productsRouter)
 apiRouter.use('/categories/', categoriesRouter)
 apiRouter.use('/users/', usersRouter)
-apiRouter.use('/orders/', db_auth.checkAuthenticated, ordersRouter)
-apiRouter.use('/carts/', db_auth.checkAuthenticated, cartsRouter)
+apiRouter.use('/orders/', ordersRouter)
+apiRouter.use('/carts/', cartsRouter)
 
 
 module.exports = apiRouter;

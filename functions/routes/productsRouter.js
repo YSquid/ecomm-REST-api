@@ -16,11 +16,11 @@ productsRouter.get("/:id", db_products.getProductById);
 
 
 //POST product
-productsRouter.post("/", db_auth.checkAuthenticated, db_auth.isSuperUser, db_products.addProduct);
+productsRouter.post("/", db_auth.isSuperUser, db_products.addProduct);
 
 //PUT product
-productsRouter.put("/:id", db_auth.checkAuthenticated, db_auth.isSuperUser, db_products.updateProduct);
+productsRouter.put("/:id", db_auth.isSuperUser, db_products.updateProduct);
 
 //DELETE product
 
-productsRouter.delete("/:id", db_auth.checkAuthenticated, db_auth.isSuperUser, db_products.deleteProduct);
+productsRouter.delete("/:id", db_auth.isSuperUser, db_products.deleteProduct);

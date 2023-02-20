@@ -36,6 +36,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(
   session({
     secret: process.env.SESSION_SECRET,
+    resave: true,
+    saveUninitialized: false,
     cookie: {
       sameSite: 'none',
       secure: true
@@ -88,7 +90,7 @@ app.post(
   "/login",
   passport.authenticate("local", {session: true}),
   (req, res) => {
-    console.log(res)
+    console.log(`IN THE LOGIN function ${req.user}`)
     res.json({ token: req.user.id });
   }
 );
