@@ -14,7 +14,7 @@ const getUsers = async (req, res, next) => {
 };
 
 const getUserById = async (req, res, next) => {
-  const { id } = req.params;
+  const {id} = await req.user
   const { data, error } = await supabase
     .from("users")
     .select()
@@ -33,7 +33,7 @@ const addUser = async (req, res, next) => {
   const { email, password, superuser } = req.body;
   const { data, error } = await supabase
     .from("users")
-    .insert({ emai: email, password: password, superuser: false })
+    .insert({ email: email, password: password, superuser: false })
     .select();
 
   if (error) {
@@ -47,7 +47,7 @@ const addUser = async (req, res, next) => {
 //PUT actions
 
 const updateUser = async (req, res, next) => {
-  const { id } = req.params;
+  const{id} = await req.user;
   const { password, superuser } = req.body;
   const { data, error } = await supabase
     .from("users")

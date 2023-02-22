@@ -9,11 +9,14 @@ module.exports = usersRouter;
 usersRouter.get('/', db_auth.isSuperUser, db_users.getUsers)
 
 //GET user by emil - psql database
-usersRouter.get('/:id', db_users.getUserById)
+usersRouter.get('/user', db_users.getUserById)
+
+//adduser - bypasses registration route, available for superusers only
+usersRouter.post('/', db_auth.isSuperUser, db_users.addUser)
 
 
 //PUT user
-usersRouter.put('/:id', db_users.updateUser)
+usersRouter.put('/', db_users.updateUser)
 
 //DELETE user
 //Testing - this is tested in app.test.js via the 'deletes registertest user' test
