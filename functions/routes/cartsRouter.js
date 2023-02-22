@@ -19,7 +19,7 @@ cartsRouter.get("/cartproducts/", db_carts.getCartsProductsById);
 cartsRouter.post("/", db_products.checkStock, db_carts.addProductToCart);
 
 cartsRouter.post(
-  "/checkout/:user_id",
+  "/checkout/",
   db_carts.confirmStock,
   db_carts.checkoutCart,
   db_products.updateStock

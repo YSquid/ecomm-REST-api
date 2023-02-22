@@ -111,7 +111,7 @@ const addProductToCart = async (req, res, next) => {
 
 //Confirm stock of all products in cart before creating order
 const confirmStock = async (req, res, next) => {
-  const { user_id } = req.params;
+  const {id} = await req.user
 
   const { data, error } = await supabase
     .from("carts_products")
@@ -120,7 +120,7 @@ const confirmStock = async (req, res, next) => {
       stock
     )`
     )
-    .eq("cart_id", user_id);
+    .eq("cart_id", id);
   if (error) {
     res.status(404);
     next(error.message);
@@ -146,19 +146,19 @@ const confirmStock = async (req, res, next) => {
 
 //Checkout a cart and create order
 const checkoutCart = async (req, res, next) => {
-  const { user_id } = req.params;
+  const {id} = await req.user
 
   //fetch the info carts_products needed to make orders and orders_products entries
   const { data } = await supabase
     .from("carts_products")
     .select("cart_id, product_id, product_name, product_price, product_count")
-    .eq("cart_id", user_id);
+    .eq("cart_id", id);
   const productCount = data.length;
 
   //create the order in orders, return the data
   const orderData = await supabase
     .from("orders")
-    .insert({ user_id: user_id })
+    .insert({ user_id: id })
     .select();
   //extract the orderId
   const orderId = orderData.data[0].id;
@@ -180,7 +180,7 @@ const checkoutCart = async (req, res, next) => {
   }
 
   //delete from carts_products
-  await supabase.from("carts_products").delete().eq("cart_id", user_id);
+  await supabase.from("carts_products").delete().eq("cart_id", id);
 
   let finalData = await supabase
     .from("orders_products")
@@ -191,12 +191,13 @@ const checkoutCart = async (req, res, next) => {
 };
 
 const addOneToCart = async (req, res, next) => {
-  const { cart_id, product_id } = req.body;
+  const {id} = await req.user
+  const {product_id } = req.body;
   //return current count in cart
   const { data, error } = await supabase
     .from("carts_products")
     .select("product_count")
-    .eq("cart_id", cart_id);
+    .eq("cart_id", id);
   if (error) {
     res.status(404);
     next(error.message);
@@ -214,12 +215,13 @@ const addOneToCart = async (req, res, next) => {
 };
 
 const subtractOneFromCart = async (req, res, next) => {
-  const { cart_id, product_id } = req.body;
+  const {id} = await req.user
+  const { product_id } = req.body;
   //return current count in cart
   const { data, error } = await supabase
     .from("carts_products")
     .select("product_count")
-    .eq("cart_id", cart_id);
+    .eq("cart_id", id);
   if (error) {
     res.status(404);
     next(error.message);
