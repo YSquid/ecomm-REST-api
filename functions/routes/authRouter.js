@@ -10,7 +10,7 @@ authRouter.post('/register', passport.authenticate('register'), (req, res) => {
     res.status(200).send(req.user);
 });
 
-authRouter.get('/logout', (req, res, next) => {
+authRouter.post('/logout', (req, res, next) => {
     req.logout((err) => {
         if (err) {
             return next(err);

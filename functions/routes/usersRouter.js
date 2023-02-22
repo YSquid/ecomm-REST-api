@@ -8,6 +8,7 @@ module.exports = usersRouter;
 //GET all users - psql database
 usersRouter.get('/', db_auth.isSuperUser, db_users.getUsers)
 
+
 //GET user by emil - psql database
 usersRouter.get('/user', db_users.getUserById)
 
