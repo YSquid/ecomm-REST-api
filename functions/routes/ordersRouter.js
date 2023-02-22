@@ -10,10 +10,10 @@ module.exports = ordersRouter;
 ordersRouter.get("/", db_auth.isSuperUser, db_orders.getOrders);
 
 //GET order by id
-ordersRouter.get("/:id", db_orders.getOrderById);
+ordersRouter.get("/orderid/:id", db_orders.getOrderById);
 
 //GET orders by user id
-ordersRouter.get("/user/:id", db_orders.getOrdersByUserId)
+ordersRouter.get("/userid", db_orders.getOrdersByUserId)
 
 //GET order products by id
 ordersRouter.get("/orderproducts/:id", db_orders.getOrderProductsById);
@@ -22,7 +22,7 @@ ordersRouter.get("/orderproducts/:id", db_orders.getOrderProductsById);
 ordersRouter.post('/', db_orders.addOrder);
 
 //PUT order
-ordersRouter.put('/:id', db_orders.updateOrder);
+ordersRouter.put('/:order_id', db_orders.updateOrder);
 
 //DELETE order
 ordersRouter.delete('/:id', db_auth.isSuperUser, db_orders.deleteOrder);

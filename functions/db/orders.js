@@ -3,7 +3,6 @@ const supabase = require("./index");
 //GET actions
 const getOrders = async (req, res, next) => {
   const { data, error } = await supabase.from("orders").select();
-  console.log(data);
   if (error) {
     res.status(404);
     next(error.message);
@@ -25,12 +24,12 @@ const getOrderById = async (req, res, next) => {
 };
 
 const getOrdersByUserId = async (req, res, next) => {
-  const { id } = req.params;
+  const { id } = await req.user;
   const { data, error } = await supabase
     .from("orders")
     .select()
     .eq("user_id", id)
-    .order('id', {ascending: false});
+    .order("id", { ascending: false });
   if (error) {
     next(error.message);
   } else {
@@ -55,10 +54,10 @@ const getOrderProductsById = async (req, res, next) => {
 //POST actions
 
 const addOrder = async (req, res, next) => {
-  const { user_id } = req.body;
+  const { id } = await req.user;
   const { data, error } = await supabase
     .from("orders")
-    .insert({ user_id: user_id })
+    .insert({ user_id: id})
     .select();
 
   if (error) {
@@ -72,13 +71,14 @@ const addOrder = async (req, res, next) => {
 //PUT actions
 
 const updateOrder = async (req, res, next) => {
-  const { id } = req.params;
-  const { user_id } = req.body;
-
+  const { order_id } = req.params;
+  const { id } = await req.user;
+  console.log(id)
+  console.log(order_id)
   const { data, error } = await supabase
     .from("orders")
-    .update({ user_id: user_id })
-    .eq("id", id)
+    .update({ user_id: id })
+    .eq("id", order_id)
     .select();
 
   if (error) {
