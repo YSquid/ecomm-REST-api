@@ -71,7 +71,7 @@ const checkStock = async (req, res, next) => {
 //POST actions
 
 const addProduct = async (req, res, next) => {
-  const { name, description, price, stock } = req.body;
+  const { name, description, price, stock, category_id, category_name } = req.body;
   const { data, error } = await supabase
     .from("products")
     .insert({
@@ -79,6 +79,8 @@ const addProduct = async (req, res, next) => {
       description: description,
       price: price,
       stock: stock,
+      category_id: category_id,
+      category_name: category_name
     })
     .select();
 

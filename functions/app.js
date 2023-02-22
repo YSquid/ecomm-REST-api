@@ -39,7 +39,11 @@ app.use(
       secret: "secretGoesHere",
       saveUninitialized: false,
       resave: false,
-      store: memoryStore
+      store: memoryStore,
+      cookie: {
+        sameSite: 'none',
+        secure: true
+    }
   })
 );
 app.use(passport.initialize());
