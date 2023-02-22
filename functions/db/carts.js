@@ -13,7 +13,7 @@ const getCarts = async (req, res, next) => {
 };
 
 const getCartById = async (req, res, next) => {
-  const { id } = req.params;
+  const {id} = await req.user
   const { data, error } = await supabase.from("carts").select().eq("id", id);
 
   if (error) {
@@ -25,7 +25,8 @@ const getCartById = async (req, res, next) => {
 };
 
 const getCartsProductsById = async (req, res, next) => {
-  const {id} = req.params;
+  const {id} = await req.user
+  console.log(id)
   const {data, error} = await supabase.from("carts_products").select().eq("cart_id", id)
 
   if (error) {
@@ -40,15 +41,17 @@ const getCartsProductsById = async (req, res, next) => {
 //Add item to a cart
 
 const addProductToCart = async (req, res, next) => {
-  const { cart_id, product_id, product_name, product_price, product_count } = req.body;
+  const {id} = await req.user
+  const { product_id, product_name, product_price, product_count } = req.body;
 
   //select rows where the cart id and product id matches selection
   const { data, error } = await supabase
     .from("carts_products")
     .select()
-    .eq("cart_id", cart_id)
+    .eq("cart_id", id)
     .eq("product_id", product_id);
-
+  console.log('carts select ran')
+  console.log(data)
   
   if(error) {
     next(error.message)
@@ -61,17 +64,20 @@ const addProductToCart = async (req, res, next) => {
   } else {
     newTotal = Number(product_count);
   }
-
+  console.log('new total ran')
+  console.log(newTotal)
   if (error) {
+    console.log('error after new total')
     res.status(404);
     next(error.message);
   } else {
     //if data has length, i.e. that product is in cart, update with count
     if (data.length > 0) {
+      console.log("first if ran")
       const { data, error } = await supabase
         .from("carts_products")
         .update({ product_count: newTotal })
-        .eq("cart_id", cart_id)
+        .eq("cart_id", id)
         .eq("product_id", product_id)
         .select();
       if (error) {
@@ -81,11 +87,12 @@ const addProductToCart = async (req, res, next) => {
         res.status(200).send(data);
       }
     } else {
+      console.log("else ran")
       //if data has no length i.e. that product is not in cart, add it with count
       const { data, error } = await supabase
         .from("carts_products")
         .insert({
-          cart_id: cart_id,
+          cart_id: id,
           product_id: product_id,
           product_name: product_name,
           product_price: product_price,

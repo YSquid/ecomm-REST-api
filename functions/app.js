@@ -6,9 +6,10 @@ const PORT = process.env.EXPRESS_PORT || 3000;
 const passport = require("passport");
 const session = require("express-session");
 const bodyParser = require("body-parser");
-require("./passportConfig")(passport);
+require("./passportConfig");
 const db_auth = require("./db/auth");
 const cookieParser = require('cookie-parser')
+const memoryStore = new session.MemoryStore();
 // const cors = require("cors");
 
 //Middleware stack
@@ -35,25 +36,14 @@ app.use(express.urlencoded({ extended: false }));
 //Define session variables and intialize session
 app.use(
   session({
-    secret: process.env.SESSION_SECRET,
-    resave: true,
-    saveUninitialized: false,
-    cookie: {
-      sameSite: 'none',
-      secure: true
-    }
+      secret: "secretGoesHere",
+      saveUninitialized: false,
+      resave: false,
+      store: memoryStore
   })
 );
 app.use(passport.initialize());
 app.use(passport.session());
-
-//serialize and deserialize user
-passport.serializeUser((user, done) => {
-  return done(null, user.id);
-});
-passport.deserializeUser((id, done) => {
-  return done(null, db_auth.getUserById(id));
-});
 
 
 // Show login details
@@ -75,48 +65,6 @@ app.get("/", (req, res) => {
   res.send("Home page");
 });
 
-app.get('/env', (req, res) => {
-  res.send(process.env)
-})
-
-//Login routes
-//login page general
-app.get("/login", db_auth.isLoggedIn, (req, res) => {
-  res.render("login.ejs");
-});
-
-//local login post
-app.post(
-  "/login",
-  passport.authenticate("local", {session: true}),
-  (req, res) => {
-    console.log(`IN THE LOGIN function ${req.user}`)
-    res.json({ token: req.user.id });
-  }
-);
-
-//Logout route
-app.post("/logout", (req, res) => {
-  req.logout((error) => {
-    if (error) {
-      return next(error);
-    }
-  });
-  res.status(200).send("Logged Out");
-});
-
-//Register route
-app.get("/register", (req, res) => {
-  res.render("register.ejs");
-});
-
-app.post(
-  "/register",
-  passport.authenticate("local-signup", { session: true }),
-  (req, res, next) => {
-    res.status(201).json({ user: req.session.passport.user });
-  }
-);
 
 //Default error handling
 app.use((err, req, res, next) => {
