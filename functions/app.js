@@ -7,8 +7,7 @@ const passport = require("passport");
 const session = require("express-session");
 const bodyParser = require("body-parser");
 require("./passportConfig");
-const db_auth = require("./db/auth");
-const cookieParser = require('cookie-parser')
+// const cookieParser = require('cookie-parser')
 const memoryStore = new session.MemoryStore();
 // const cors = require("cors");
 
@@ -30,19 +29,18 @@ app.use(function (req, res, next) {
 });
 
 app.use(bodyParser.json());
-app.use(cookieParser());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: true }));
 
 //Define session variables and intialize session
 app.use(
   session({
-      secret: "secretGoesHere",
-      saveUninitialized: false,
-      resave: false,
-      store: memoryStore,
-      cookie: {
-        sameSite: 'none',
-        secure: true
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: true,
+    store: memoryStore,
+    cookie: {
+      // sameSite: 'none',
+      secure: false
     }
   })
 );

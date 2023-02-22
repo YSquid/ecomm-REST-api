@@ -1,5 +1,5 @@
-const LocalStrategy = require("passport-local");
 const passport = require('passport');
+const LocalStrategy = require("passport-local").Strategy;
 const { emailExists, createUser, matchPassword, getUserById } = require("./db/auth.js");
 
 passport.use(
