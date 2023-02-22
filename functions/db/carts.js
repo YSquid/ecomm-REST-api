@@ -49,6 +49,11 @@ const addProductToCart = async (req, res, next) => {
     .eq("cart_id", cart_id)
     .eq("product_id", product_id);
 
+  
+  if(error) {
+    next(error.message)
+  }
+
   //calculate new total amount of product if its in cart, if not newTotal is just product_count;
   let newTotal;
   if (data.length > 0) {
