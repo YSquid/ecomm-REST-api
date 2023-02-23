@@ -17,7 +17,7 @@ apiRouter.get('/', (req, res) => {
 apiRouter.use('/auth', authRouter)
 apiRouter.use('/products/', productsRouter)
 apiRouter.use('/categories/', categoriesRouter)
-apiRouter.use('/users/', db_auth.checkAuthenticated, usersRouter)
+apiRouter.use('/users/', usersRouter)
 apiRouter.use('/orders/', db_auth.checkAuthenticated, ordersRouter)
 apiRouter.use('/carts/', db_auth.checkAuthenticated, cartsRouter)
 

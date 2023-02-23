@@ -14,16 +14,17 @@ const getUsers = async (req, res, next) => {
 };
 
 const getUserById = async (req, res, next) => {
-  const {id} = await req.user
-  const { data, error } = await supabase
-    .from("users")
-    .select()
-    .eq("id", id);
-  if (error) {
-    res.status(404);
-    next(error.message);
+  if (!req.user) {
+    res.status(404).send("No user");
   } else {
-    res.status(200).send(data);
+    const { id } = await req.user;
+    const { data, error } = await supabase.from("users").select().eq("id", id);
+    if (error) {
+      res.status(404);
+      next(error.message);
+    } else {
+      res.status(200).send(data);
+    }
   }
 };
 
@@ -47,7 +48,7 @@ const addUser = async (req, res, next) => {
 //PUT actions
 
 const updateUser = async (req, res, next) => {
-  const{id} = await req.user;
+  const { id } = await req.user;
   const { password, superuser } = req.body;
   const { data, error } = await supabase
     .from("users")
@@ -55,19 +56,17 @@ const updateUser = async (req, res, next) => {
     .eq("id", id)
     .select();
 
-    if (error) {
-      res.status(404);
-      next(error.message);
-    } else {
-      res.status(200).send(data);
-    }
+  if (error) {
+    res.status(404);
+    next(error.message);
+  } else {
+    res.status(200).send(data);
+  }
 };
-
-
 
 const deleteUserById = async (req, res, next) => {
   const { id } = req.params;
-  const {data, error} = await supabase.from("users").delete().eq('id', id);
+  const { data, error } = await supabase.from("users").delete().eq("id", id);
 
   if (error) {
     res.status(404);
@@ -84,6 +83,3 @@ module.exports = {
   updateUser,
   deleteUserById,
 };
-
-
-
