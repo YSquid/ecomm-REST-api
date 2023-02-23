@@ -9,7 +9,7 @@ const bodyParser = require("body-parser");
 require("./passportConfig");
 // const cookieParser = require('cookie-parser')
 const memoryStore = new session.MemoryStore();
-// const cors = require("cors");
+
 
 //Middleware stack
 //allows cross and setting of session for passport https://stackoverflow.com/questions/19043511/passport-js-fails-to-maintain-session-in-cross-domain

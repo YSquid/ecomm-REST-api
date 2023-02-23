@@ -15,7 +15,7 @@ const getUsers = async (req, res, next) => {
 
 const getUserById = async (req, res, next) => {
   if (!req.user) {
-    res.status(404).send("No user");
+    res.status(402).send("No user");
   } else {
     const { id } = await req.user;
     const { data, error } = await supabase.from("users").select().eq("id", id);
