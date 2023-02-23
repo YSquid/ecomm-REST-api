@@ -40,7 +40,7 @@ app.use(
     store: memoryStore,
     cookie: {
       // sameSite: 'none',
-      secure: false,
+      secure: true,
       maxAge: 86400
     }
   })
