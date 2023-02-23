@@ -40,7 +40,7 @@ app.use(
     store: memoryStore,
     cookie: {
       sameSite: 'none',
-      secure: true,
+      secure: process.env.NODE_ENV === "production" ? true : false,
       maxAge: 86400
     }
   })
