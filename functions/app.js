@@ -7,7 +7,7 @@ const passport = require("passport");
 const session = require("express-session");
 const bodyParser = require("body-parser");
 require("./passportConfig");
-// const cookieParser = require('cookie-parser')
+const cookieParser = require('cookie-parser')
 const memoryStore = new session.MemoryStore();
 
 
@@ -30,6 +30,7 @@ app.use(function (req, res, next) {
 
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 //Define session variables and intialize session
 app.use(
@@ -39,8 +40,8 @@ app.use(
     saveUninitialized: false,
     store: memoryStore,
     cookie: {
-      // sameSite: 'none',
-      secure: false,
+      sameSite: 'none',
+      secure: true,
       maxAge: 86400
     }
   })
