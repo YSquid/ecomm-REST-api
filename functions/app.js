@@ -40,8 +40,8 @@ app.use(
     saveUninitialized: false,
     store: memoryStore,
     cookie: {
-      // sameSite: 'none',
-      secure: false,
+      sameSite: 'none',
+      secure: true,
       maxAge: 86400
     }
   })
