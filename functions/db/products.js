@@ -4,7 +4,7 @@ const supabase = require("./index");
 
 const getProducts = async (req, res) => {
   try {
-    const { data } = await supabase.from("products").select().order('category_id');
+    const { data } = await supabase.from("products").select().order('category_id', 'id');
     res.status(200).send(data);
   } catch (error) {
     res.send(error);
