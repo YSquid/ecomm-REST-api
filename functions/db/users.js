@@ -17,7 +17,7 @@ const getUserById = async (req, res, next) => {
   if (!req.user) {
     res.status(402).send("No user");
   } else {
-    const { id } = await req.user;
+    const { id } = req.user;
     const { data, error } = await supabase.from("users").select().eq("id", id);
     if (error) {
       res.status(404);
@@ -48,7 +48,7 @@ const addUser = async (req, res, next) => {
 //PUT actions
 
 const updateUser = async (req, res, next) => {
-  const { id } = await req.user;
+  const { id } = req.user;
   const { password, superuser } = req.body;
   const { data, error } = await supabase
     .from("users")

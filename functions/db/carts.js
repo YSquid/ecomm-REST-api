@@ -13,7 +13,7 @@ const getCarts = async (req, res, next) => {
 };
 
 const getCartById = async (req, res, next) => {
-  const {id} = await req.user
+  const {id} = req.user
   const { data, error } = await supabase.from("carts").select().eq("id", id);
 
   if (error) {
@@ -25,8 +25,7 @@ const getCartById = async (req, res, next) => {
 };
 
 const getCartsProductsById = async (req, res, next) => {
-  const {id} = await req.user
-  console.log(id)
+  const {id} = req.user
   const {data, error} = await supabase.from("carts_products").select().eq("cart_id", id)
 
   if (error) {
@@ -41,7 +40,7 @@ const getCartsProductsById = async (req, res, next) => {
 //Add item to a cart
 
 const addProductToCart = async (req, res, next) => {
-  const {id} = await req.user
+  const {id} = req.user
   const { product_id, product_name, product_price, product_count } = req.body;
 
   //select rows where the cart id and product id matches selection
@@ -111,7 +110,7 @@ const addProductToCart = async (req, res, next) => {
 
 //Confirm stock of all products in cart before creating order
 const confirmStock = async (req, res, next) => {
-  const {id} = await req.user
+  const {id} = req.user
 
   const { data, error } = await supabase
     .from("carts_products")
@@ -146,7 +145,7 @@ const confirmStock = async (req, res, next) => {
 
 //Checkout a cart and create order
 const checkoutCart = async (req, res, next) => {
-  const {id} = await req.user
+  const {id} = req.user
 
   //fetch the info carts_products needed to make orders and orders_products entries
   const { data } = await supabase
@@ -191,7 +190,7 @@ const checkoutCart = async (req, res, next) => {
 };
 
 const addOneToCart = async (req, res, next) => {
-  const {id} = await req.user
+  const {id} = req.user
   const {product_id } = req.body;
   //return current count in cart
   const { data, error } = await supabase
@@ -215,7 +214,7 @@ const addOneToCart = async (req, res, next) => {
 };
 
 const subtractOneFromCart = async (req, res, next) => {
-  const {id} = await req.user
+  const {id} = req.user
   const { product_id } = req.body;
   //return current count in cart
   const { data, error } = await supabase

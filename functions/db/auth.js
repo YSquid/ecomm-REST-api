@@ -12,9 +12,7 @@ const emailExists = async (email) => {
 const createUser = async (email, password) => {
   const salt = await bcrypt.genSalt(10);
   const hash = await bcrypt.hash(password, salt);
-
   const {data} = await supabase.from("users").insert({email: email, password: hash, superuser: 'false'}).select();
-
   //can't insert user into table condition
   if (data.length == 0) return false;
   //returns object with id, email, password, superuser(bool). This is used to define user

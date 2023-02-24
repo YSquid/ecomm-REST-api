@@ -24,7 +24,7 @@ const getOrderById = async (req, res, next) => {
 };
 
 const getOrdersByUserId = async (req, res, next) => {
-  const { id } = await req.user;
+  const { id } = req.user;
   const { data, error } = await supabase
     .from("orders")
     .select()
@@ -54,7 +54,7 @@ const getOrderProductsById = async (req, res, next) => {
 //POST actions
 
 const addOrder = async (req, res, next) => {
-  const { id } = await req.user;
+  const { id } = req.user;
   const { data, error } = await supabase
     .from("orders")
     .insert({ user_id: id})

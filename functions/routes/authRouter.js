@@ -2,6 +2,10 @@ const express = require('express');
 const authRouter = express.Router();
 const passport = require('passport');
 
+authRouter.get("/login", (req, res, next) => {
+    res.render('login.ejs')
+})
+
 authRouter.post('/login', passport.authenticate('login', {session: true}), (req, res) => {
     res.status(200).send(req.user);
 })

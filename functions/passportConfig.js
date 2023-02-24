@@ -60,8 +60,10 @@ passport.use(
 
 //serialize and deserialize user
 passport.serializeUser((user, done) => {
+  console.dir(user)
   return done(null, user.id);
 });
-passport.deserializeUser((id, done) => {
-  return done(null, getUserById(id));
+passport.deserializeUser(async (id, done) => {
+  const user = await getUserById(id)
+  return done(null, user);
 });
