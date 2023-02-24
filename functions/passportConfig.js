@@ -39,7 +39,7 @@ passport.use(
         if (!user) return done(null, false);
         const isMatch = await matchPassword(password, user.password);
         if (!isMatch) return done(null, false);
-        done(null, user);
+        return done(null, user);
       } catch (error) {
         return done(error, false);
       }
