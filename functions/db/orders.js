@@ -73,8 +73,6 @@ const addOrder = async (req, res, next) => {
 const updateOrder = async (req, res, next) => {
   const { order_id } = req.params;
   const { id } = await req.user;
-  console.log(id)
-  console.log(order_id)
   const { data, error } = await supabase
     .from("orders")
     .update({ user_id: id })

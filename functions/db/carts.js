@@ -49,8 +49,6 @@ const addProductToCart = async (req, res, next) => {
     .select()
     .eq("cart_id", id)
     .eq("product_id", product_id);
-  console.log('carts select ran')
-  console.log(data)
   
   if(error) {
     next(error.message)
@@ -63,16 +61,12 @@ const addProductToCart = async (req, res, next) => {
   } else {
     newTotal = Number(product_count);
   }
-  console.log('new total ran')
-  console.log(newTotal)
   if (error) {
-    console.log('error after new total')
     res.status(404);
     next(error.message);
   } else {
     //if data has length, i.e. that product is in cart, update with count
     if (data.length > 0) {
-      console.log("first if ran")
       const { data, error } = await supabase
         .from("carts_products")
         .update({ product_count: newTotal })
@@ -86,7 +80,6 @@ const addProductToCart = async (req, res, next) => {
         res.status(200).send(data);
       }
     } else {
-      console.log("else ran")
       //if data has no length i.e. that product is not in cart, add it with count
       const { data, error } = await supabase
         .from("carts_products")

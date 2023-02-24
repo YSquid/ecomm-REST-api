@@ -60,7 +60,6 @@ passport.use(
 
 //serialize and deserialize user
 passport.serializeUser((user, done) => {
-  console.dir(user)
   return done(null, user.id);
 });
 passport.deserializeUser(async (id, done) => {
