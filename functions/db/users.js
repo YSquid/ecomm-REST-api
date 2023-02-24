@@ -14,9 +14,10 @@ const getUsers = async (req, res, next) => {
 };
 
 const getUserById = async (req, res, next) => {
-  if (!req.user) {
-    res.status(402).send("No user");
-  } else {
+  console.log(req.user)
+  // if (!req.user) {
+  //   res.status(402).send("No user");
+  // } else {
     const { id } = req.user;
     const { data, error } = await supabase.from("users").select().eq("id", id);
     if (error) {
@@ -25,7 +26,7 @@ const getUserById = async (req, res, next) => {
     } else {
       res.status(200).send(data);
     }
-  }
+  
 };
 
 //POST actions
