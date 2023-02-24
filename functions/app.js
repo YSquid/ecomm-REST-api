@@ -50,16 +50,6 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 
-// Show login details
-// let showlogs = (req, res, next) => {
-//   console.log(`=== Session ===`);
-//   console.log(req.session);
-//   console.log(`=== Passport ===`);
-//   console.log(req.session.passport);
-//   next();
-// };
-// app.use(showlogs);
-
 //Mount apiRouter (from routes/api) at '/api' path
 const apiRouter = require("./routes/api");
 app.use("/api", apiRouter);

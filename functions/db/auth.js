@@ -29,7 +29,6 @@ const checkAuthenticated = (req, res, next) => {
     return next();
   }
   res.send("Access denied must be logged in")
-  // res.redirect("/login");
 };
 
 const isLoggedIn = (req, res, next) => {

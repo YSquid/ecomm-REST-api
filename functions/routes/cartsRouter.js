@@ -26,13 +26,6 @@ cartsRouter.post(
 );
 
 //PUT cart
-// cartsRouter.put("/updatecart/:id", db_carts.updateCart);
 cartsRouter.put("/plusone/", db_carts.addOneToCart);
 cartsRouter.put("/minusone/", db_carts.subtractOneFromCart);
 
-
-
-
-// DEPRECATED
-// cartsRouter.put("/updatecart/:id", db_carts.updateCart);
-// cartsRouter.delete("/:id", db_carts.deleteCart);
