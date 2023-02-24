@@ -2,6 +2,8 @@ const passport = require('passport');
 const LocalStrategy = require("passport-local").Strategy;
 const { emailExists, createUser, matchPassword, getUserById } = require("./db/auth.js");
 
+//defining passport strategies - https://www.passportjs.org/concepts/authentication/strategies/
+
 passport.use(
   "register",
   new LocalStrategy(

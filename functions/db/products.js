@@ -44,7 +44,6 @@ const getProductById = async (req, res, next) => {
   }
 };
 
-//Check for stock of product is > 0
 
 const checkStock = async (req, res, next) => {
   const { product_id, product_count } = req.body;
@@ -119,6 +118,7 @@ const updateProduct = async (req, res, next) => {
 //Update stock - run after a cart checkout middlware
 
 const updateStock = (req, res, next) => {
+  //res.locals.orders_products set in the checkoutCart function from ./carts.js
   res.locals.orders_products.forEach(async (product) => {
     //lookup product stock
     const { data } = await supabase

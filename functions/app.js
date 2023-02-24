@@ -11,7 +11,8 @@ const cookieParser = require('cookie-parser')
 const memoryStore = new session.MemoryStore();
 
 
-//Middleware stack
+//== MIDDLEWARE STACK == //
+
 //allows cross and setting of session for passport https://stackoverflow.com/questions/19043511/passport-js-fails-to-maintain-session-in-cross-domain
 app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Credentials", true);

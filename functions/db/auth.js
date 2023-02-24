@@ -25,6 +25,7 @@ const matchPassword = async (password, hashPassword) => {
 };
 
 const checkAuthenticated = (req, res, next) => {
+  //using the built in passport.isAuthenticated - https://stackoverflow.com/questions/38820251/how-is-req-isauthenticated-in-passport-js-implemented
   if (req.isAuthenticated()) { 
     return next();
   }
